@@ -1,0 +1,45 @@
+<view class="container" wx:if="{{!loading}}">
+  <!-- 菜品信息 -->
+  <view class="dish-header card">
+    <image
+      class="dish-detail-image"
+      src="{{dish.imageFileId || '/images/default-dish.png'}}"
+      mode="aspectFill"
+    />
+    <text class="dish-detail-name">{{dish.name}}</text>
+    <view class="dish-detail-stats">
+      <text class="avg-score">{{dish.avgScore > 0 ? dish.avgScore.toFixed(1) : '暂无评分'}}</text>
+      <text class="rating-count-text">{{dish.ratingCount || 0}}人已评</text>
+    </view>
+  </view>
+
+  <!-- 评分区域 -->
+  <view class="rating-section card">
+    <text class="section-title">{{existingRatingId ? '修改我的评分' : '我来评分'}}</text>
+    <view class="star-row">
+      <star-rating value="{{myScore}}" size="{{60}}" bind:change="onScoreChange" />
+      <text class="score-display" wx:if="{{myScore > 0}}">{{myScore}}分</text>
+    </view>
+    <view class="comment-area">
+      <textarea
+        class="comment-input"
+        placeholder="说点什么吧（选填，50字以内）"
+        maxlength="50"
+        value="{{myComment}}"
+        bindinput="onCommentInput"
+      />
+      <text class="char-count">{{myComment.length}}/50</text>
+    </view>
+    <button
+      class="btn-primary submit-btn"
+      bindtap="onSubmit"
+      disabled="{{submitting || myScore === 0}}"
+    >
+      {{submitting ? '提交中...' : (existingRatingId ? '修改评分' : '提交评分')}}
+    </button>
+  </view>
+</view>
+
+<view wx:else class="loading-wrap">
+  <text class="loading-text">加载中...</text>
+</view>

@@ -1,0 +1,46 @@
+<view class="container">
+  <!-- 管理员入口 -->
+  <view wx:if="{{isAdmin}}" class="admin-entry card" bindtap="goAdmin">
+    <text class="admin-icon">⚙️</text>
+    <text class="admin-text">菜品管理</text>
+    <text class="admin-arrow">></text>
+  </view>
+
+  <!-- 评分历史 -->
+  <view class="section">
+    <view class="section-title">我的评分历史</view>
+
+    <view wx:if="{{loading}}" class="loading-wrap">
+      <text class="loading-text">加载中...</text>
+    </view>
+
+    <block wx:else>
+      <view wx:if="{{ratingHistory.length > 0}}" class="history-list">
+        <view
+          class="history-item card"
+          wx:for="{{ratingHistory}}"
+          wx:key="_id"
+        >
+          <view class="history-header">
+            <text class="history-dish-name">{{item.dishName}}</text>
+            <text class="history-date">{{item.dateDisplay}}</text>
+          </view>
+          <view class="history-body">
+            <view class="history-stars">
+              <text
+                wx:for="{{[1,2,3,4,5]}}"
+                wx:for-item="star"
+                wx:for-index="idx"
+                wx:key="*this"
+                class="star-char {{idx < item.score ? 'active' : ''}}"
+              >★</text>
+              <text class="history-score">{{item.score}}分</text>
+            </view>
+            <text wx:if="{{item.comment}}" class="history-comment">{{item.comment}}</text>
+          </view>
+        </view>
+      </view>
+      <empty-state wx:else message="还没有评分记录" />
+    </block>
+  </view>
+</view>

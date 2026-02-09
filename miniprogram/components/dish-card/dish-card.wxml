@@ -1,0 +1,25 @@
+<view class="dish-card card" bindtap="onTap">
+  <view class="dish-card-content">
+    <image
+      class="dish-image"
+      src="{{dish.imageFileId || '/images/default-dish.png'}}"
+      mode="aspectFill"
+    />
+    <view class="dish-info">
+      <text class="dish-name">{{dish.name}}</text>
+      <text wx:if="{{dish.description}}" class="dish-desc">{{dish.description}}</text>
+      <view class="dish-score-row">
+        <star-rating value="{{dish.avgScore}}" readonly="{{true}}" size="{{28}}" />
+        <text class="score-text">{{dish.avgScore > 0 ? dish.avgScore.toFixed(1) : '暂无'}}</text>
+        <text class="rating-count">{{dish.ratingCount || 0}}人评</text>
+      </view>
+    </view>
+  </view>
+  <view class="dish-actions" wx:if="{{showAction}}">
+    <text class="action-btn">去评分 ></text>
+  </view>
+  <view class="admin-actions" wx:if="{{showDelete}}">
+    <view class="edit-btn" catchtap="onEdit"><text>编辑</text></view>
+    <view class="delete-btn" catchtap="onDelete"><text>删除</text></view>
+  </view>
+</view>

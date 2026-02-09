@@ -1,0 +1,11 @@
+<view class="star-rating" style="font-size: {{size}}rpx;">
+  <view
+    class="star {{index < value ? 'active' : ''}}"
+    wx:for="{{[1,2,3,4,5]}}"
+    wx:key="*this"
+    wx:for-item="star"
+    wx:for-index="index"
+    data-score="{{star}}"
+    bindtap="onTap"
+  >★</view>
+</view>

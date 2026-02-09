@@ -1,0 +1,60 @@
+<view class="container">
+  <!-- Tab 切换 -->
+  <view class="tab-bar">
+    <view
+      class="tab-item {{currentTab === 'week' ? 'active' : ''}}"
+      data-tab="week"
+      bindtap="onTabChange"
+    >
+      <text>本周排行</text>
+    </view>
+    <view
+      class="tab-item {{currentTab === 'month' ? 'active' : ''}}"
+      data-tab="month"
+      bindtap="onTabChange"
+    >
+      <text>本月排行</text>
+    </view>
+  </view>
+
+  <view wx:if="{{loading}}" class="loading-wrap">
+    <text class="loading-text">加载中...</text>
+  </view>
+
+  <block wx:else>
+    <view wx:if="{{rankList.length > 0}}" class="rank-list">
+      <view
+        class="rank-item card"
+        wx:for="{{rankList}}"
+        wx:key="_id"
+      >
+        <view class="rank-number {{index < 3 ? 'top-three' : ''}}">
+          <text>{{index + 1}}</text>
+        </view>
+        <image
+          class="rank-dish-image"
+          wx:if="{{item.imageFileId}}"
+          src="{{item.imageFileId}}"
+          mode="aspectFill"
+        />
+        <view class="rank-dish-image rank-dish-image-placeholder" wx:else>
+          <text class="placeholder-text">暂无图片</text>
+        </view>
+        <view class="rank-info">
+          <text class="rank-dish-name">{{item.name}}</text>
+          <view class="rank-stats">
+            <text class="rank-score">{{item.avgScoreText}}分</text>
+            <text class="rank-count">{{item.ratingCount}}人评价</text>
+          </view>
+        </view>
+        <view class="rank-star">
+          <view class="rank-stars-row">
+            <text wx:for="{{item.stars}}" wx:key="*this" wx:for-item="cls" wx:for-index="si" class="star-icon {{cls}}">★</text>
+          </view>
+          <text class="star-value">{{item.avgScoreText}}</text>
+        </view>
+      </view>
+    </view>
+    <empty-state wx:else message="暂无排行数据" />
+  </block>
+</view>
