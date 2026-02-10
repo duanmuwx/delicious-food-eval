@@ -38,6 +38,12 @@
       {{submitting ? '提交中...' : (existingRatingId ? '修改评分' : '提交评分')}}
     </button>
   </view>
+
+  <!-- 查看评论入口 -->
+  <view class="view-comments-section" bindtap="onViewComments">
+    <text class="view-comments-text">查看其他评论</text>
+    <text class="view-comments-arrow">›</text>
+  </view>
 </view>
 
 <view wx:else class="loading-wrap">

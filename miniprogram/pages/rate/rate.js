@@ -58,6 +58,13 @@ Page({
     this.setData({ myComment: e.detail.value })
   },
 
+  onViewComments: function () {
+    var dish = this.data.dish
+    wx.navigateTo({
+      url: '/pages/dish-comments/dish-comments?dishId=' + this.data.dishId + '&dishName=' + encodeURIComponent(dish.name || '')
+    })
+  },
+
   onSubmit: function () {
     var that = this
     if (that.data.submitting) return

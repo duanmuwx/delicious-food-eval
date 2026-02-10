@@ -21,6 +21,17 @@
   background: #f5f5f5;
 }
 
+.dish-image-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dish-image-placeholder .placeholder-text {
+  font-size: 20rpx;
+  color: var(--color-text-secondary);
+}
+
 .dish-info {
   flex: 1;
 }

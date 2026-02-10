@@ -1,10 +1,14 @@
 <view class="dish-card card" bindtap="onTap">
   <view class="dish-card-content">
     <image
+      wx:if="{{dish.imageFileId}}"
       class="dish-image"
-      src="{{dish.imageFileId || '/images/default-dish.png'}}"
+      src="{{dish.imageFileId}}"
       mode="aspectFill"
     />
+    <view wx:else class="dish-image dish-image-placeholder">
+      <text class="placeholder-text">暂无图片</text>
+    </view>
     <view class="dish-info">
       <text class="dish-name">{{dish.name}}</text>
       <text wx:if="{{dish.description}}" class="dish-desc">{{dish.description}}</text>

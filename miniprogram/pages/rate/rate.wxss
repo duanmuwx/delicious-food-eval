@@ -82,6 +82,26 @@
   margin-top: 10rpx;
 }
 
+.view-comments-section {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 28rpx 32rpx;
+  margin-top: 20rpx;
+  background: #fff;
+  border-radius: 12rpx;
+}
+
+.view-comments-text {
+  font-size: 30rpx;
+  color: var(--color-text);
+}
+
+.view-comments-arrow {
+  font-size: 36rpx;
+  color: var(--color-text-secondary);
+}
+
 .loading-wrap {
   display: flex;
   justify-content: center;
