@@ -7,8 +7,8 @@ Page({
     // 表单
     dishName: '',
     mealIndex: 0,
-    mealOptions: ['午餐', '晚餐'],
-    mealValues: ['lunch', 'dinner'],
+    mealOptions: ['早餐', '午餐', '晚餐'],
+    mealValues: ['breakfast', 'lunch', 'dinner'],
     date: '',
     imageFilePath: '',
     // 今日菜品列表
@@ -145,6 +145,16 @@ Page({
       console.error('onSubmit error:', err)
       wx.showToast({ title: '添加失败', icon: 'none' })
       that.setData({ submitting: false })
+    })
+  },
+
+  // 点击菜品查看评分列表
+  onDishTap: function (e) {
+    var dishId = e.detail.dishId
+    var dish = this.data.todayDishes.filter(function (d) { return d._id === dishId })[0]
+    var dishName = dish ? dish.name : ''
+    wx.navigateTo({
+      url: '/pages/admin-ratings/admin-ratings?dishId=' + dishId + '&dishName=' + encodeURIComponent(dishName)
     })
   },
 

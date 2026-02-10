@@ -1,0 +1,166 @@
+/* 菜品头部 */
+.dish-header {
+  display: flex;
+  flex-direction: row;
+  padding: 24rpx;
+  margin-bottom: 20rpx;
+}
+
+.dish-image {
+  width: 160rpx;
+  height: 160rpx;
+  border-radius: 12rpx;
+  margin-right: 24rpx;
+  flex-shrink: 0;
+}
+
+.dish-image-placeholder {
+  background-color: #F5F5F5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.placeholder-text {
+  font-size: 22rpx;
+  color: var(--color-text-secondary);
+}
+
+.dish-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.dish-name {
+  font-size: 34rpx;
+  font-weight: 600;
+  color: var(--color-text);
+  margin-bottom: 12rpx;
+}
+
+.dish-stats {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8rpx;
+}
+
+.dish-score {
+  font-size: 28rpx;
+  color: var(--color-primary);
+  font-weight: 600;
+  margin-left: 12rpx;
+}
+
+.dish-count {
+  font-size: 24rpx;
+  color: var(--color-text-secondary);
+}
+
+/* 评论列表 */
+.section-title {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: var(--color-text);
+  margin-bottom: 16rpx;
+}
+
+.comment-list {
+  margin-top: 8rpx;
+}
+
+.comment-item {
+  padding: 24rpx;
+}
+
+.comment-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16rpx;
+}
+
+.comment-user {
+  display: flex;
+  align-items: center;
+}
+
+.user-avatar {
+  width: 64rpx;
+  height: 64rpx;
+  border-radius: 50%;
+  margin-right: 16rpx;
+  flex-shrink: 0;
+}
+
+.user-avatar-default {
+  background-color: var(--color-primary-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.avatar-text {
+  font-size: 28rpx;
+  color: #FFFFFF;
+  font-weight: 600;
+}
+
+.user-name {
+  font-size: 28rpx;
+  color: var(--color-text);
+  font-weight: 500;
+}
+
+.comment-date {
+  font-size: 24rpx;
+  color: var(--color-text-secondary);
+}
+
+.comment-body {
+  display: flex;
+  flex-direction: column;
+  padding-left: 80rpx;
+}
+
+.comment-stars {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8rpx;
+}
+
+.star-char {
+  font-size: 28rpx;
+  color: var(--color-star-inactive);
+  margin-right: 2rpx;
+}
+
+.star-char.active {
+  color: var(--color-star-active);
+}
+
+.comment-score {
+  font-size: 26rpx;
+  color: var(--color-primary);
+  font-weight: 600;
+  margin-left: 12rpx;
+}
+
+.comment-text {
+  font-size: 28rpx;
+  color: var(--color-text);
+  line-height: 1.6;
+}
+
+/* 加载状态 */
+.loading-wrap {
+  display: flex;
+  justify-content: center;
+  padding: 100rpx 0;
+}
+
+.loading-text {
+  font-size: 28rpx;
+  color: var(--color-text-secondary);
+}

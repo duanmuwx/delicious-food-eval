@@ -51,5 +51,13 @@ Page({
   onPullDownRefresh: function () {
     this.loadRanking()
     wx.stopPullDownRefresh()
+  },
+
+  onDishTap: function (e) {
+    var dishId = e.currentTarget.dataset.dishId
+    var dishName = e.currentTarget.dataset.dishName
+    wx.navigateTo({
+      url: '/pages/dish-comments/dish-comments?dishId=' + dishId + '&dishName=' + encodeURIComponent(dishName)
+    })
   }
 })

@@ -29,7 +29,7 @@ exports.main = async (event, context) => {
     return { code: -1, message: '参数不完整' }
   }
 
-  if (meal !== 'lunch' && meal !== 'dinner') {
+  if (meal !== 'breakfast' && meal !== 'lunch' && meal !== 'dinner') {
     return { code: -1, message: '餐次参数错误' }
   }
 

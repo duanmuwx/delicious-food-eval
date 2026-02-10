@@ -1,0 +1,71 @@
+<view class="container">
+  <!-- 头像区域 -->
+  <view class="avatar-section card">
+    <text class="section-label">头像</text>
+    <button class="avatar-btn" open-type="chooseAvatar" bindchooseavatar="onChooseAvatar">
+      <image
+        class="avatar-preview"
+        wx:if="{{avatarUrl}}"
+        src="{{avatarUrl}}"
+        mode="aspectFill"
+      />
+      <view class="avatar-preview avatar-default" wx:else>
+        <text class="avatar-default-text">点击选择</text>
+      </view>
+    </button>
+  </view>
+
+  <!-- 昵称方式切换 -->
+  <view class="mode-section card">
+    <text class="section-label">昵称设置方式</text>
+    <view class="mode-tabs">
+      <view
+        class="mode-tab {{mode === 'wechat' ? 'active' : ''}}"
+        data-mode="wechat"
+        bindtap="switchMode"
+      >
+        <text>微信昵称</text>
+      </view>
+      <view
+        class="mode-tab {{mode === 'custom' ? 'active' : ''}}"
+        data-mode="custom"
+        bindtap="switchMode"
+      >
+        <text>自定义昵称</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 微信昵称输入 -->
+  <view wx:if="{{mode === 'wechat'}}" class="nickname-section card">
+    <text class="section-label">微信昵称</text>
+    <input
+      class="nickname-input"
+      type="nickname"
+      placeholder="点击获取微信昵称"
+      value="{{nickName}}"
+      bindinput="onNickNameInput"
+    />
+    <text class="input-tip">点击输入框将自动获取你的微信昵称</text>
+  </view>
+
+  <!-- 自定义昵称输入 -->
+  <view wx:if="{{mode === 'custom'}}" class="nickname-section card">
+    <text class="section-label">自定义昵称</text>
+    <input
+      class="nickname-input"
+      placeholder="请输入你想显示的昵称"
+      value="{{customNickName}}"
+      bindinput="onCustomNickNameInput"
+      maxlength="20"
+    />
+    <text class="input-tip">其他用户将看到此昵称</text>
+  </view>
+
+  <!-- 保存按钮 -->
+  <view class="save-section">
+    <button class="btn-primary save-btn" bindtap="onSave" disabled="{{saving}}">
+      {{saving ? '保存中...' : '保存'}}
+    </button>
+  </view>
+</view>

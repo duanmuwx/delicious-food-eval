@@ -4,7 +4,10 @@
     "pages/rank/rank",
     "pages/my/my",
     "pages/rate/rate",
-    "pages/admin/admin"
+    "pages/admin/admin",
+    "pages/admin-ratings/admin-ratings",
+    "pages/dish-comments/dish-comments",
+    "pages/profile/profile"
   ],
   "window": {
     "navigationBarBackgroundColor": "#FF8C42",

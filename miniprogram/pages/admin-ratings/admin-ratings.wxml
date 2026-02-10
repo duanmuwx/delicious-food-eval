@@ -1,0 +1,43 @@
+<view class="container">
+  <view class="section-title">{{dishName}} - 评分记录 ({{ratings.length}}条)</view>
+
+  <view wx:if="{{loading}}" class="loading-wrap">
+    <text class="loading-text">加载中...</text>
+  </view>
+
+  <block wx:else>
+    <view wx:if="{{ratings.length > 0}}" class="rating-list">
+      <view
+        class="rating-item card"
+        wx:for="{{ratings}}"
+        wx:key="_id"
+      >
+        <view class="rating-header">
+          <text class="rating-user">{{item.userId}}</text>
+          <text class="rating-date">{{item.date}}</text>
+        </view>
+        <view class="rating-body">
+          <view class="rating-stars">
+            <text
+              wx:for="{{[1,2,3,4,5]}}"
+              wx:for-item="star"
+              wx:for-index="idx"
+              wx:key="*this"
+              class="star-char {{idx < item.score ? 'active' : ''}}"
+            >★</text>
+            <text class="rating-score">{{item.score}}分</text>
+          </view>
+          <text wx:if="{{item.comment}}" class="rating-comment">{{item.comment}}</text>
+        </view>
+        <view class="rating-actions">
+          <view
+            class="delete-rating-btn"
+            data-rating-id="{{item._id}}"
+            catchtap="onDeleteRating"
+          >删除</view>
+        </view>
+      </view>
+    </view>
+    <empty-state wx:else message="暂无评分记录" />
+  </block>
+</view>

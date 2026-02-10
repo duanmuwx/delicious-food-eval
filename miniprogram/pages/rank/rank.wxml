@@ -27,6 +27,9 @@
         class="rank-item card"
         wx:for="{{rankList}}"
         wx:key="_id"
+        data-dish-id="{{item._id}}"
+        data-dish-name="{{item.name}}"
+        bindtap="onDishTap"
       >
         <view class="rank-number {{index < 3 ? 'top-three' : ''}}">
           <text>{{index + 1}}</text>

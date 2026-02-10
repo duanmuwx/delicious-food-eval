@@ -1,9 +1,13 @@
 var auth = require('../../utils/auth')
 var dateUtil = require('../../utils/date')
+var cloudUtil = require('../../utils/cloud')
 
 Page({
   data: {
     isAdmin: false,
+    hasProfile: false,
+    nickName: '',
+    avatarUrl: '',
     ratingHistory: [],
     loading: true
   },
@@ -16,7 +20,12 @@ Page({
     var that = this
     that.setData({ loading: true })
     auth.ensureLogin().then(function (openid) {
-      that.setData({ isAdmin: auth.isAdmin() })
+      that.setData({
+        isAdmin: auth.isAdmin(),
+        hasProfile: auth.hasProfile(),
+        nickName: auth.getProfile().nickName,
+        avatarUrl: auth.getProfile().avatarUrl
+      })
       var db = wx.cloud.database()
       // 查询用户的评分历史，按日期倒序
       return db.collection('ratings')
@@ -52,6 +61,7 @@ Page({
             var dish = dishMap[r.dishId] || {}
             return {
               _id: r._id,
+              dishId: r.dishId,
               dishName: dish.name || '已删除菜品',
               score: r.score,
               comment: r.comment || '',
@@ -69,5 +79,32 @@ Page({
 
   goAdmin: function () {
     wx.navigateTo({ url: '/pages/admin/admin' })
+  },
+
+  goProfile: function () {
+    wx.navigateTo({ url: '/pages/profile/profile' })
+  },
+
+  onDeleteRating: function (e) {
+    var that = this
+    var ratingId = e.currentTarget.dataset.ratingId
+    var dishId = e.currentTarget.dataset.dishId
+    wx.showModal({
+      title: '确认删除',
+      content: '删除后该评分将无法恢复',
+      success: function (res) {
+        if (res.confirm) {
+          cloudUtil.callCloud('deleteRating', {
+            ratingId: ratingId,
+            dishId: dishId
+          }).then(function () {
+            wx.showToast({ title: '已删除', icon: 'success' })
+            that.loadData()
+          }).catch(function () {
+            wx.showToast({ title: '删除失败', icon: 'none' })
+          })
+        }
+      }
+    })
   }
 })

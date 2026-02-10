@@ -91,6 +91,7 @@
           dish="{{item}}"
           showAction="{{false}}"
           showDelete="{{true}}"
+          bind:dishtap="onDishTap"
           bind:delete="onDeleteDish"
           bind:edit="onEditDish"
         />

@@ -60,6 +60,7 @@ Page({
 
   onSubmit: function () {
     var that = this
+    if (that.data.submitting) return
     if (that.data.myScore === 0) {
       wx.showToast({ title: '请先选择评分', icon: 'none' })
       return

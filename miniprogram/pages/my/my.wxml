@@ -1,4 +1,25 @@
 <view class="container">
+  <!-- 用户资料区域 -->
+  <view class="profile-section card" bindtap="goProfile">
+    <view class="profile-info">
+      <image
+        class="profile-avatar"
+        wx:if="{{avatarUrl}}"
+        src="{{avatarUrl}}"
+        mode="aspectFill"
+      />
+      <view class="profile-avatar profile-avatar-default" wx:else>
+        <text class="profile-avatar-text">{{hasProfile ? nickName[0] : '?'}}</text>
+      </view>
+      <view class="profile-detail">
+        <text class="profile-name" wx:if="{{hasProfile}}">{{nickName}}</text>
+        <text class="profile-name profile-name-placeholder" wx:else>点击设置个人资料</text>
+        <text class="profile-tip" wx:if="{{!hasProfile}}">设置昵称后评论将显示你的昵称</text>
+      </view>
+    </view>
+    <text class="profile-arrow">></text>
+  </view>
+
   <!-- 管理员入口 -->
   <view wx:if="{{isAdmin}}" class="admin-entry card" bindtap="goAdmin">
     <text class="admin-icon">⚙️</text>
@@ -37,6 +58,14 @@
               <text class="history-score">{{item.score}}分</text>
             </view>
             <text wx:if="{{item.comment}}" class="history-comment">{{item.comment}}</text>
+            <view class="history-actions">
+              <view
+                class="delete-rating-btn"
+                data-rating-id="{{item._id}}"
+                data-dish-id="{{item.dishId}}"
+                catchtap="onDeleteRating"
+              >删除</view>
+            </view>
           </view>
         </view>
       </view>

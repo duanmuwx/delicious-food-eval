@@ -8,6 +8,20 @@
   </view>
 
   <block wx:else>
+    <!-- 早餐 -->
+    <view class="section">
+      <view class="section-title">🌅 早餐</view>
+      <block wx:if="{{breakfastDishes.length > 0}}">
+        <dish-card
+          wx:for="{{breakfastDishes}}"
+          wx:key="_id"
+          dish="{{item}}"
+          bind:dishtap="onDishTap"
+        />
+      </block>
+      <empty-state wx:else message="今日早餐菜品暂未录入" />
+    </view>
+
     <!-- 午餐 -->
     <view class="section">
       <view class="section-title">☀️ 午餐</view>

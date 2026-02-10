@@ -5,6 +5,7 @@ Page({
   data: {
     today: '',
     todayDisplay: '',
+    breakfastDishes: [],
     lunchDishes: [],
     dinnerDishes: [],
     loading: true
@@ -35,6 +36,7 @@ Page({
     }).then(function (res) {
       var dishes = res.data
       that.setData({
+        breakfastDishes: dishes.filter(function (d) { return d.meal === 'breakfast' }),
         lunchDishes: dishes.filter(function (d) { return d.meal === 'lunch' }),
         dinnerDishes: dishes.filter(function (d) { return d.meal === 'dinner' }),
         loading: false

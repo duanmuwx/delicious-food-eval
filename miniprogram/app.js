@@ -10,11 +10,17 @@ App({
     }
     this.globalData = {
       openid: null,
-      isAdmin: false
+      isAdmin: false,
+      hasProfile: false,
+      nickName: '',
+      avatarUrl: ''
     }
   },
   globalData: {
     openid: null,
-    isAdmin: false
+    isAdmin: false,
+    hasProfile: false,
+    nickName: '',
+    avatarUrl: ''
   }
 })
