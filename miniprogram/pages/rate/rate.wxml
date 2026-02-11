@@ -1,11 +1,19 @@
 <view class="container" wx:if="{{!loading}}">
   <!-- 菜品信息 -->
   <view class="dish-header card">
-    <image
-      class="dish-detail-image"
-      src="{{dish.imageFileId || '/images/default-dish.png'}}"
-      mode="aspectFill"
-    />
+    <block wx:if="{{dish.imageFileId}}">
+      <image
+        class="dish-detail-image"
+        src="{{dish.imageFileId}}"
+        mode="aspectFill"
+      />
+      <text wx:if="{{dish.imageContributorName}}" class="contributor-text">图片由 {{dish.imageContributorName}} 提供</text>
+    </block>
+    <view wx:else class="upload-guide" bindtap="onUploadImage">
+      <view class="upload-guide-icon">📷</view>
+      <text class="upload-guide-text">这道菜还没有图片，拍一张吧</text>
+      <text wx:if="{{imageUploading}}" class="upload-guide-hint">上传中...</text>
+    </view>
     <text class="dish-detail-name">{{dish.name}}</text>
     <view class="dish-detail-stats">
       <text class="avg-score">{{dish.avgScore > 0 ? dish.avgScore.toFixed(1) : '暂无评分'}}</text>

@@ -58,6 +58,12 @@
   color: var(--color-text-secondary);
 }
 
+.contributor-text {
+  font-size: 22rpx;
+  color: var(--color-text-secondary);
+  margin-bottom: 8rpx;
+}
+
 /* 评论列表 */
 .section-title {
   font-size: 30rpx;

@@ -10,7 +10,8 @@ Page({
     myComment: '',
     existingRatingId: null,
     submitting: false,
-    loading: true
+    loading: true,
+    imageUploading: false
   },
 
   onLoad: function (options) {
@@ -62,6 +63,69 @@ Page({
     var dish = this.data.dish
     wx.navigateTo({
       url: '/pages/dish-comments/dish-comments?dishId=' + this.data.dishId + '&dishName=' + encodeURIComponent(dish.name || '')
+    })
+  },
+
+  onUploadImage: function () {
+    var that = this
+    if (that.data.imageUploading) return
+
+    // 检查是否已设置昵称
+    if (!auth.hasProfile()) {
+      wx.showModal({
+        title: '提示',
+        content: '上传图片前请先设置昵称',
+        confirmText: '去设置',
+        success: function (res) {
+          if (res.confirm) {
+            wx.navigateTo({ url: '/pages/profile/profile' })
+          }
+        }
+      })
+      return
+    }
+
+    wx.chooseMedia({
+      count: 1,
+      mediaType: ['image'],
+      sourceType: ['album', 'camera'],
+      success: function (res) {
+        var tempFile = res.tempFiles[0]
+        var tempFilePath = tempFile.tempFilePath
+
+        // 限制图片大小 5MB
+        if (tempFile.size > 5 * 1024 * 1024) {
+          wx.showToast({ title: '图片不能超过5MB', icon: 'none' })
+          return
+        }
+
+        that.setData({ imageUploading: true })
+
+        var cloudPath = 'dishes/' + Date.now() + '-' + Math.random().toString(36).substr(2, 8) + '.jpg'
+        var uploadedFileID = ''
+        wx.cloud.uploadFile({
+          cloudPath: cloudPath,
+          filePath: tempFilePath
+        }).then(function (uploadRes) {
+          uploadedFileID = uploadRes.fileID
+          return cloudUtil.callCloud('uploadDishImage', {
+            dishId: that.data.dishId,
+            imageFileId: uploadedFileID
+          })
+        }).then(function () {
+          wx.showToast({ title: '上传成功', icon: 'success' })
+          that.loadData()
+        }).catch(function (err) {
+          console.error('uploadImage error:', err)
+          // 清理已上传但未关联的云存储文件
+          if (uploadedFileID) {
+            wx.cloud.deleteFile({ fileList: [uploadedFileID] })
+          }
+          wx.showToast({ title: err.message || '上传失败', icon: 'none' })
+        }).then(function () {
+          that.setData({ imageUploading: false })
+        })
+      }
     })
   },
 

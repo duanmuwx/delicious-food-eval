@@ -12,6 +12,7 @@
     </view>
     <view class="dish-info">
       <text class="dish-name">{{dish.name}}</text>
+      <text wx:if="{{dish.imageContributorName}}" class="contributor-text">图片由 {{dish.imageContributorName}} 提供</text>
       <view class="dish-stats">
         <star-rating value="{{dish.avgScore}}" readonly="{{true}}" size="28" />
         <text class="dish-score">{{dish.avgScoreText}}分</text>

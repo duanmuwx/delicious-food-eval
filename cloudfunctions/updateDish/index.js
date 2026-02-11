@@ -33,6 +33,9 @@ exports.main = async (event, context) => {
 
     if (imageFileId !== undefined) {
       updateData.imageFileId = imageFileId
+      // 图片变更时清空用户贡献者信息
+      updateData.imageContributor = ''
+      updateData.imageContributorName = ''
       // 删除旧图片
       if (oldImageFileId) {
         try {

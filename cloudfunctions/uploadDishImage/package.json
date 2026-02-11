@@ -1,0 +1,9 @@
+{
+  "name": "uploadDishImage",
+  "version": "1.0.0",
+  "description": "用户为无图菜品上传图片",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "~2.6.3"
+  }
+}
