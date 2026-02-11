@@ -7,7 +7,8 @@
     "pages/admin/admin",
     "pages/admin-ratings/admin-ratings",
     "pages/dish-comments/dish-comments",
-    "pages/profile/profile"
+    "pages/profile/profile",
+    "pages/share-landing/share-landing"
   ],
   "window": {
     "navigationBarBackgroundColor": "#FF8C42",

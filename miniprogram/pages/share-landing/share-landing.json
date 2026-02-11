@@ -1,0 +1,7 @@
+{
+  "navigationBarTitleText": "今日菜单",
+  "usingComponents": {
+    "dish-card": "../../components/dish-card/dish-card",
+    "empty-state": "../../components/empty-state/empty-state"
+  }
+}

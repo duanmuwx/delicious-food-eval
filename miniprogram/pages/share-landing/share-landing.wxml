@@ -1,0 +1,26 @@
+<view class="container">
+  <view class="header">
+    <text class="header-title">{{mealEmoji}} {{dateDisplay}} {{mealName}}</text>
+    <text class="header-sub" wx:if="{{!loading && dishes.length > 0}}">共 {{dishes.length}} 道菜</text>
+  </view>
+
+  <view wx:if="{{loading}}" class="loading-wrap">
+    <view class="loading-text">加载中...</view>
+  </view>
+
+  <block wx:else>
+    <block wx:if="{{dishes.length > 0}}">
+      <dish-card
+        wx:for="{{dishes}}"
+        wx:key="_id"
+        dish="{{item}}"
+        bind:dishtap="onDishTap"
+      />
+    </block>
+    <empty-state wx:else message="该餐次暂无菜品" />
+  </block>
+
+  <view class="bottom-bar">
+    <button class="btn-home" bindtap="onGoHome">进入小程序查看更多</button>
+  </view>
+</view>

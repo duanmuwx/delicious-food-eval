@@ -1,6 +1,7 @@
 var auth = require('../../utils/auth')
 var dateUtil = require('../../utils/date')
 var cloudUtil = require('../../utils/cloud')
+var shareUtil = require('../../utils/share')
 
 Page({
   data: {
@@ -24,6 +25,8 @@ Page({
     // 状态
     submitting: false,
     loading: true,
+    // 分享提示
+    showSharePrompt: false,
     // 编辑弹窗
     showEditModal: false,
     editDish: null,
@@ -67,6 +70,7 @@ Page({
       .get()
       .then(function (res) {
         that.setData({ todayDishes: res.data, loading: false })
+        that._checkSharePrompt(res.data)
       })
       .catch(function (err) {
         console.error('loadTodayDishes error:', err)
@@ -81,6 +85,7 @@ Page({
 
   onMealChange: function (e) {
     this.setData({ mealIndex: e.detail.value })
+    this._checkSharePrompt(this.data.todayDishes)
   },
 
   onDateChange: function (e) {
@@ -336,5 +341,48 @@ Page({
       wx.showToast({ title: '更新失败', icon: 'none' })
       that.setData({ editSubmitting: false })
     })
+  },
+
+  // 分享提示：当前餐次≥3道菜时提示，每天每餐次只提示一次
+  _checkSharePrompt: function (dishes) {
+    var meal = this.data.mealValues[this.data.mealIndex]
+    var mealDishes = dishes.filter(function (d) { return d.meal === meal })
+    if (mealDishes.length < 3) {
+      this.setData({ showSharePrompt: false })
+      return
+    }
+    var key = 'share_prompt_' + this.data.date + '_' + meal
+    if (wx.getStorageSync(key)) {
+      this.setData({ showSharePrompt: false })
+      return
+    }
+    this.setData({ showSharePrompt: true })
+  },
+
+  onDismissSharePrompt: function () {
+    var meal = this.data.mealValues[this.data.mealIndex]
+    var key = 'share_prompt_' + this.data.date + '_' + meal
+    wx.setStorageSync(key, true)
+    this.setData({ showSharePrompt: false })
+  },
+
+  onShareAppMessage: function () {
+    var meal = this.data.mealValues[this.data.mealIndex]
+    var mealName = this.data.mealOptions[this.data.mealIndex]
+    var dishes = this.data.todayDishes.filter(function (d) { return d.meal === meal })
+    var names = dishes.map(function (d) { return d.name })
+    var title = shareUtil.generateShareTitle(mealName, names)
+    var imageUrl = shareUtil.getFirstImageUrl(dishes)
+
+    // 分享后标记已提示
+    var key = 'share_prompt_' + this.data.date + '_' + meal
+    wx.setStorageSync(key, true)
+    this.setData({ showSharePrompt: false })
+
+    return {
+      title: title,
+      path: '/pages/share-landing/share-landing?date=' + this.data.date + '&meal=' + meal,
+      imageUrl: imageUrl || undefined
+    }
   }
 })

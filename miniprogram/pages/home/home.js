@@ -1,5 +1,6 @@
 var dateUtil = require('../../utils/date')
 var auth = require('../../utils/auth')
+var shareUtil = require('../../utils/share')
 
 Page({
   data: {
@@ -56,5 +57,29 @@ Page({
     var that = this
     that.loadDishes()
     wx.stopPullDownRefresh()
+  },
+
+  onShareAppMessage: function () {
+    var hour = new Date().getHours()
+    var meal = 'lunch'
+    var mealName = '午餐'
+    if (hour < 10) {
+      meal = 'breakfast'
+      mealName = '早餐'
+    } else if (hour >= 16) {
+      meal = 'dinner'
+      mealName = '晚餐'
+    }
+
+    var mealDishes = this.data[meal === 'breakfast' ? 'breakfastDishes' : meal === 'lunch' ? 'lunchDishes' : 'dinnerDishes']
+    var names = mealDishes.map(function (d) { return d.name })
+    var title = shareUtil.generateShareTitle(mealName, names)
+    var imageUrl = shareUtil.getFirstImageUrl(mealDishes)
+
+    return {
+      title: title,
+      path: '/pages/share-landing/share-landing?date=' + this.data.today + '&meal=' + meal,
+      imageUrl: imageUrl || undefined
+    }
   }
 })
