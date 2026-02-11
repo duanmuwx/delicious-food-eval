@@ -36,7 +36,7 @@ Page({
     editSubmitting: false
   },
 
-  onLoad: function () {
+  onLoad: function (options) {
     // 校验管理员身份
     var that = this
     auth.ensureLogin().then(function () {
@@ -47,9 +47,20 @@ Page({
         }, 1500)
         return
       }
-      that.setData({ date: dateUtil.getToday() })
+      var date = options.date || dateUtil.getToday()
+      that.setData({ date: date })
+      if (options.meal) {
+        var mealIdx = that.data.mealValues.indexOf(options.meal)
+        if (mealIdx !== -1) {
+          that.setData({ mealIndex: mealIdx })
+        }
+      }
       that.loadTodayDishes()
     })
+  },
+
+  onGoWeekly: function () {
+    wx.navigateTo({ url: '/pages/weekly/weekly' })
   },
 
   onShow: function () {

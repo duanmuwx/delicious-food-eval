@@ -5,6 +5,7 @@
     "pages/my/my",
     "pages/rate/rate",
     "pages/admin/admin",
+    "pages/weekly/weekly",
     "pages/admin-ratings/admin-ratings",
     "pages/dish-comments/dish-comments",
     "pages/profile/profile",

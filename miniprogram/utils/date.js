@@ -31,10 +31,32 @@ function formatDateChinese(dateStr) {
   return parseInt(parts[1]) + '月' + parseInt(parts[2]) + '日'
 }
 
+function getWeekRangeByOffset(offset) {
+  var now = new Date()
+  var dayOfWeek = now.getDay() || 7
+  var monday = new Date(now)
+  monday.setDate(now.getDate() - dayOfWeek + 1 + (offset * 7))
+  var dates = []
+  for (var i = 0; i < 7; i++) {
+    var d = new Date(monday)
+    d.setDate(monday.getDate() + i)
+    dates.push(formatDate(d))
+  }
+  return { start: dates[0], end: dates[6], dates: dates }
+}
+
+function getDayOfWeekLabel(dateStr) {
+  var labels = ['周日', '周一', '周二', '周三', '周四', '周五', '周六']
+  var d = new Date(dateStr.replace(/-/g, '/'))
+  return labels[d.getDay()]
+}
+
 module.exports = {
   getToday: getToday,
   formatDate: formatDate,
   getWeekRange: getWeekRange,
   getMonthRange: getMonthRange,
-  formatDateChinese: formatDateChinese
+  formatDateChinese: formatDateChinese,
+  getWeekRangeByOffset: getWeekRangeByOffset,
+  getDayOfWeekLabel: getDayOfWeekLabel
 }

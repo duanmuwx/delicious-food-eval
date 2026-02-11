@@ -1,0 +1,100 @@
+var auth = require('../../utils/auth')
+var dateUtil = require('../../utils/date')
+
+Page({
+  data: {
+    weekOffset: 0,
+    weekLabel: '',
+    today: '',
+    days: [],
+    mealKeys: ['breakfast', 'lunch', 'dinner'],
+    mealLabels: ['早餐', '午餐', '晚餐'],
+    loading: true
+  },
+
+  onLoad: function () {
+    var that = this
+    that.setData({ today: dateUtil.getToday() })
+    auth.ensureLogin().then(function () {
+      if (!auth.isAdmin()) {
+        wx.showToast({ title: '无管理员权限', icon: 'none' })
+        setTimeout(function () { wx.navigateBack() }, 1500)
+        return
+      }
+      that.loadWeek()
+    })
+  },
+
+  onShow: function () {
+    if (auth.isAdmin() && this.data.today) {
+      this.loadWeek()
+    }
+  },
+
+  onPrevWeek: function () {
+    this.setData({ weekOffset: this.data.weekOffset - 1 })
+    this.loadWeek()
+  },
+
+  onNextWeek: function () {
+    this.setData({ weekOffset: this.data.weekOffset + 1 })
+    this.loadWeek()
+  },
+
+  loadWeek: function () {
+    var that = this
+    that.setData({ loading: true })
+
+    var range = dateUtil.getWeekRangeByOffset(that.data.weekOffset)
+    var weekLabel = dateUtil.formatDateChinese(range.start) + ' - ' + dateUtil.formatDateChinese(range.end)
+    that.setData({ weekLabel: weekLabel })
+
+    var db = wx.cloud.database()
+    var _ = db.command
+    db.collection('dishes')
+      .where({
+        date: _.gte(range.start).and(_.lte(range.end))
+      })
+      .limit(100)
+      .field({ date: true, meal: true })
+      .get()
+      .then(function (res) {
+        var countMap = {}
+        for (var i = 0; i < res.data.length; i++) {
+          var dish = res.data[i]
+          if (!countMap[dish.date]) {
+            countMap[dish.date] = { breakfast: 0, lunch: 0, dinner: 0 }
+          }
+          if (countMap[dish.date][dish.meal] !== undefined) {
+            countMap[dish.date][dish.meal]++
+          }
+        }
+
+        var days = []
+        for (var j = 0; j < range.dates.length; j++) {
+          var date = range.dates[j]
+          days.push({
+            date: date,
+            label: dateUtil.formatDateChinese(date),
+            dayLabel: dateUtil.getDayOfWeekLabel(date),
+            isToday: date === that.data.today,
+            meals: countMap[date] || { breakfast: 0, lunch: 0, dinner: 0 }
+          })
+        }
+
+        that.setData({ days: days, loading: false })
+      })
+      .catch(function (err) {
+        console.error('loadWeek error:', err)
+        that.setData({ loading: false })
+      })
+  },
+
+  onCellTap: function (e) {
+    var date = e.currentTarget.dataset.date
+    var meal = e.currentTarget.dataset.meal
+    wx.navigateTo({
+      url: '/pages/admin/admin?date=' + date + '&meal=' + meal
+    })
+  }
+})

@@ -1,0 +1,45 @@
+<view class="container">
+  <!-- 周次导航 -->
+  <view class="week-header card">
+    <view class="week-nav-btn" bindtap="onPrevWeek">◀</view>
+    <view class="week-title">{{weekLabel}}</view>
+    <view class="week-nav-btn" bindtap="onNextWeek">▶</view>
+  </view>
+
+  <view wx:if="{{loading}}" class="loading-wrap">
+    <text class="loading-text">加载中...</text>
+  </view>
+
+  <block wx:else>
+    <!-- 列头 -->
+    <view class="grid-header">
+      <view class="grid-header-date"></view>
+      <view class="grid-header-meal" wx:for="{{mealLabels}}" wx:key="*this">{{item}}</view>
+    </view>
+
+    <!-- 7天行 -->
+    <view
+      class="grid-row {{item.isToday ? 'grid-row-today' : ''}}"
+      wx:for="{{days}}"
+      wx:key="date"
+    >
+      <view class="grid-date-cell">
+        <text class="grid-day-label">{{item.dayLabel}}</text>
+        <text class="grid-date-label">{{item.label}}</text>
+      </view>
+
+      <view
+        class="grid-meal-cell {{item.meals[mealKey] > 0 ? 'grid-cell-filled' : 'grid-cell-empty'}}"
+        wx:for="{{mealKeys}}"
+        wx:for-item="mealKey"
+        wx:key="*this"
+        data-date="{{item.date}}"
+        data-meal="{{mealKey}}"
+        bindtap="onCellTap"
+      >
+        <text wx:if="{{item.meals[mealKey] > 0}}" class="cell-count">{{item.meals[mealKey]}}</text>
+        <text wx:else class="cell-empty-icon">+</text>
+      </view>
+    </view>
+  </block>
+</view>

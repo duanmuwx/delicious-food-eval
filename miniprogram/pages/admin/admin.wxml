@@ -1,4 +1,10 @@
 <view class="container">
+  <!-- 周菜单进度入口 -->
+  <view class="weekly-entry" bindtap="onGoWeekly">
+    <text class="weekly-entry-text">周菜单进度</text>
+    <text class="weekly-entry-arrow">▶</text>
+  </view>
+
   <!-- 添加菜品表单 -->
   <view class="form-section card">
     <view class="section-title">添加菜品</view>
