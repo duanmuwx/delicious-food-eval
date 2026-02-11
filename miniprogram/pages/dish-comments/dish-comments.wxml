@@ -53,13 +53,15 @@
         </view>
         <view class="comment-body">
           <view class="comment-stars">
-            <text
-              wx:for="{{[1,2,3,4,5]}}"
-              wx:for-item="star"
-              wx:for-index="idx"
+            <view
+              wx:for="{{[0,1,2,3,4]}}"
               wx:key="*this"
-              class="star-char {{idx < item.score ? 'active' : ''}}"
-            >★</text>
+              wx:for-item="idx"
+              class="comment-star-wrapper"
+            >
+              <view class="comment-star-half comment-star-left {{idx + 0.5 <= item.score ? 'active' : ''}}">★</view>
+              <view class="comment-star-half comment-star-right {{idx + 1 <= item.score ? 'active' : ''}}">★</view>
+            </view>
             <text class="comment-score">{{item.score}}分</text>
           </view>
           <text wx:if="{{item.comment}}" class="comment-text">{{item.comment}}</text>

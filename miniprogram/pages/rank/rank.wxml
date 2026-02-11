@@ -52,7 +52,10 @@
         </view>
         <view class="rank-star">
           <view class="rank-stars-row">
-            <text wx:for="{{item.stars}}" wx:key="*this" wx:for-item="cls" wx:for-index="si" class="star-icon {{cls}}">★</text>
+            <view wx:for="{{[0,1,2,3,4]}}" wx:key="*this" wx:for-item="si" class="rank-star-wrapper">
+              <view class="rank-star-half rank-star-left {{si + 0.5 <= item.avgScore ? 'active' : ''}}">★</view>
+              <view class="rank-star-half rank-star-right {{si + 1 <= item.avgScore ? 'active' : ''}}">★</view>
+            </view>
           </view>
           <text class="star-value">{{item.avgScoreText}}</text>
         </view>

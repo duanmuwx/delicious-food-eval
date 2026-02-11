@@ -4,11 +4,47 @@
   align-items: center;
 }
 
-.star {
-  color: var(--color-star-inactive);
+.star-wrapper {
+  position: relative;
+  display: inline-block;
   margin-right: 4rpx;
 }
 
-.star.active {
+.star-half {
+  position: absolute;
+  top: 0;
+  overflow: hidden;
+  color: var(--color-star-inactive);
+  line-height: 1;
+}
+
+.star-half.active {
   color: var(--color-star-active);
+}
+
+/* 左半：只显示星星左半边 */
+.star-left {
+  left: 0;
+  width: 50%;
+  overflow: hidden;
+  z-index: 1;
+}
+
+/* 右半：完整星星，在左半下面 */
+.star-right {
+  left: 0;
+  width: 100%;
+  z-index: 0;
+}
+
+/* 让 wrapper 撑开高度，宽度 = 1em */
+.star-wrapper {
+  width: 1em;
+  height: 1em;
+  font-size: inherit;
+}
+
+.star-half {
+  font-size: inherit;
+  height: 1em;
 }

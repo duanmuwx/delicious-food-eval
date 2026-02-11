@@ -7,7 +7,7 @@ Component({
   methods: {
     onTap: function (e) {
       if (this.properties.readonly) return
-      var score = e.currentTarget.dataset.score
+      var score = Number(e.currentTarget.dataset.score)
       this.setData({ value: score })
       this.triggerEvent('change', { value: score })
     }

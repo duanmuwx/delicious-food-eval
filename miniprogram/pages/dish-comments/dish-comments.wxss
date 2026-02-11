@@ -136,14 +136,38 @@
   margin-bottom: 8rpx;
 }
 
-.star-char {
-  font-size: 28rpx;
-  color: var(--color-star-inactive);
+.comment-star-wrapper {
+  position: relative;
+  display: inline-block;
+  width: 28rpx;
+  height: 28rpx;
   margin-right: 2rpx;
+  font-size: 28rpx;
 }
 
-.star-char.active {
+.comment-star-half {
+  position: absolute;
+  top: 0;
+  left: 0;
+  overflow: hidden;
+  color: var(--color-star-inactive);
+  font-size: inherit;
+  line-height: 1;
+  height: 28rpx;
+}
+
+.comment-star-half.active {
   color: var(--color-star-active);
+}
+
+.comment-star-left {
+  width: 50%;
+  z-index: 1;
+}
+
+.comment-star-right {
+  width: 100%;
+  z-index: 0;
 }
 
 .comment-score {

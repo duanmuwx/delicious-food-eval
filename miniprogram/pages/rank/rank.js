@@ -31,12 +31,6 @@ Page({
       list.forEach(function (item) {
         var score = item.avgScore || 0
         item.avgScoreText = score.toFixed(1)
-        var full = Math.floor(score)
-        var stars = []
-        for (var i = 0; i < 5; i++) {
-          stars.push(i < full ? 'active' : '')
-        }
-        item.stars = stars
       })
       that.setData({
         rankList: list,

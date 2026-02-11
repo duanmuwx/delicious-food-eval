@@ -13,7 +13,7 @@ function getFirstImageUrl(dishes) {
   for (var i = 0; i < dishes.length; i++) {
     if (dishes[i].imageFileId) return dishes[i].imageFileId
   }
-  return ''
+  return '/images/default-dish.png'
 }
 
 module.exports = {

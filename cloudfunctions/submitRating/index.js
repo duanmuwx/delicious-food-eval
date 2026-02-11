@@ -60,7 +60,7 @@ exports.main = async (event, context) => {
   const openid = wxContext.OPENID
   const { dishId, score, comment, date } = event
 
-  if (!dishId || !score || score < 1 || score > 5 || !date) {
+  if (!dishId || !score || score < 0.5 || score > 5 || score % 0.5 !== 0 || !date) {
     return { code: -1, message: '参数错误' }
   }
 
