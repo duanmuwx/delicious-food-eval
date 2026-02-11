@@ -186,55 +186,43 @@
   border-radius: 12rpx;
 }
 
-/* 分享提示条 */
-.share-prompt {
-  background: rgba(255, 140, 66, 0.1);
-  border-radius: 12rpx;
-  padding: 20rpx 24rpx;
-  margin-bottom: 20rpx;
+/* 餐次分组 */
+.meal-group {
+  margin-bottom: 24rpx;
+}
+
+.meal-group-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  padding: 16rpx 0;
 }
 
-.share-prompt-text {
-  font-size: 26rpx;
-  color: var(--color-primary);
-  flex: 1;
+.meal-group-title {
+  font-size: 28rpx;
+  font-weight: 500;
+  color: var(--color-text);
 }
 
-.share-prompt-actions {
-  display: flex;
-  align-items: center;
-  gap: 16rpx;
-  flex-shrink: 0;
-}
-
-.share-prompt-btn {
+.meal-group-share-btn {
   font-size: 24rpx;
   background: var(--color-primary);
   color: #FFFFFF;
   border-radius: 8rpx;
   padding: 0 24rpx;
-  height: 56rpx;
-  line-height: 56rpx;
+  height: 52rpx;
+  line-height: 52rpx;
   border: none;
   min-height: 0;
 }
 
-.share-prompt-dismiss {
-  font-size: 24rpx;
-  color: var(--color-text-secondary);
+.meal-group-empty {
+  padding: 24rpx 0;
 }
 
-.btn-share {
-  width: 100%;
-  margin-top: 20rpx;
-  background: var(--color-primary);
-  color: #FFFFFF;
-  font-size: 28rpx;
-  border-radius: 12rpx;
-  border: none;
+.meal-group-empty-text {
+  font-size: 26rpx;
+  color: var(--color-text-secondary);
 }
 
 /* 历史导入弹窗 */

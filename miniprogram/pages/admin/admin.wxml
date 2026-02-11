@@ -62,35 +62,42 @@
     <button class="btn-import" bindtap="onOpenImport">从历史导入</button>
   </view>
 
-  <!-- 当日菜品列表 -->
+  <!-- 当日菜品列表（按餐次分组） -->
   <view class="section">
     <view class="section-title">{{date}} 已添加菜品</view>
-
-    <!-- 分享提示条 -->
-    <view class="share-prompt" wx:if="{{showSharePrompt}}">
-      <text class="share-prompt-text">{{mealOptions[mealIndex]}}已录入，分享到群里让大家看看？</text>
-      <view class="share-prompt-actions">
-        <button class="share-prompt-btn" open-type="share">分享</button>
-        <view class="share-prompt-dismiss" bindtap="onDismissSharePrompt">忽略</view>
-      </view>
-    </view>
 
     <view wx:if="{{loading}}" class="loading-wrap">
       <text class="loading-text">加载中...</text>
     </view>
     <block wx:else>
       <block wx:if="{{todayDishes.length > 0}}">
-        <dish-card
-          wx:for="{{todayDishes}}"
-          wx:key="_id"
-          dish="{{item}}"
-          showAction="{{false}}"
-          showDelete="{{true}}"
-          bind:dishtap="onDishTap"
-          bind:delete="onDeleteDish"
-          bind:edit="onEditDish"
-        />
-        <button class="btn-share" open-type="share">分享{{mealOptions[mealIndex]}}菜单到微信群</button>
+        <view class="meal-group" wx:for="{{mealGroups}}" wx:key="meal" wx:for-item="group">
+          <view class="meal-group-header">
+            <text class="meal-group-title">{{group.label}}（{{group.dishes.length}}）</text>
+            <button
+              wx:if="{{group.dishes.length > 0}}"
+              class="meal-group-share-btn"
+              open-type="share"
+              data-meal="{{group.meal}}"
+              bindtap="onShareMeal"
+            >分享</button>
+          </view>
+          <block wx:if="{{group.dishes.length > 0}}">
+            <dish-card
+              wx:for="{{group.dishes}}"
+              wx:key="_id"
+              dish="{{item}}"
+              showAction="{{false}}"
+              showDelete="{{true}}"
+              bind:dishtap="onDishTap"
+              bind:delete="onDeleteDish"
+              bind:edit="onEditDish"
+            />
+          </block>
+          <view wx:else class="meal-group-empty">
+            <text class="meal-group-empty-text">暂无菜品</text>
+          </view>
+        </view>
       </block>
       <empty-state wx:else message="暂未添加菜品" />
     </block>
