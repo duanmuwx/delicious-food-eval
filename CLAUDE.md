@@ -22,17 +22,20 @@ This project is developed and built entirely within **WeChat DevTools (微信开
 
 ### Frontend (miniprogram/)
 
-Three-tab layout: Home (今日菜品), Leaderboard (排行榜), My (我的). Two additional non-tab pages: Rate (rate) and Admin (admin).
+Three-tab layout: Home (今日菜品), Leaderboard (排行榜), My (我的). Five additional non-tab pages.
 
-- `pages/home/` — Today's dishes list, filtered by lunch/dinner toggle
+- `pages/home/` — Today's dishes list, filtered by breakfast/lunch/dinner toggle
 - `pages/rate/` — Star rating (1-5) + optional comment for a dish
 - `pages/rank/` — Top 10 dishes by average score, weekly/monthly toggle
-- `pages/my/` — User's own rating history
+- `pages/my/` — User's own rating history with delete capability
 - `pages/admin/` — Admin-only: add dishes (with optional photo upload), delete dishes, search historical dishes for reuse
+- `pages/admin-ratings/` — Admin view of all ratings for a dish with delete capability
+- `pages/dish-comments/` — View all comments/ratings for a dish
+- `pages/profile/` — Edit user nickname and avatar
 - `components/` — `dish-card`, `star-rating`, `empty-state`
-- `utils/auth.js` — Login flow and admin status check
-- `utils/cloud.js` — Wrapper for `wx.cloud.callFunction`
-- `utils/date.js` — Date formatting helpers
+- `utils/auth.js` — Login flow, admin status check, profile caching
+- `utils/cloud.js` — Wrapper for `wx.cloud.callFunction` (expects `{ code: 0, ... }` response format)
+- `utils/date.js` — Date formatting helpers (`getToday`, `getWeekRange`, `getMonthRange`, `formatDateChinese`)
 
 ### Backend (cloudfunctions/)
 
@@ -40,22 +43,29 @@ Each subdirectory is an independent cloud function:
 
 | Function | Role |
 |---|---|
-| `login` | Returns openid, checks admin status against `admins` collection |
-| `submitRating` | Creates or updates a rating, recalculates dish `avgScore` |
+| `login` | Returns openid, checks admin status against `admins` collection, fetches user profile |
+| `submitRating` | Creates or updates a rating, recalculates dish `avgScore` from all ratings |
 | `addDish` | Admin-only: adds a dish record |
-| `deleteDish` | Admin-only: deletes dish and all associated ratings |
+| `deleteDish` | Admin-only: deletes dish, all associated ratings, and cloud storage image |
+| `deleteRating` | Deletes a rating (own or admin), recalculates dish score |
+| `updateDish` | Admin-only: updates dish description/image, deletes old image |
+| `updateProfile` | Creates or updates user record with nickname and avatar |
 | `getRanking` | Returns top 10 dishes by avg score for a given week/month |
+| `getDishRatings` | Returns all ratings for a dish with user info |
 
 ### Database Collections (Cloud DB)
 
-- **dishes** — `name`, `meal` (lunch/dinner), `date`, `imageFileId`, `avgScore`, `ratingCount`, `createdBy`, `createdAt`
-- **ratings** — `dishId`, `userId`, `score` (1-5), `comment`, `date`, `createdAt`, `updatedAt`
+- **dishes** — `name`, `meal` (breakfast/lunch/dinner), `date`, `imageFileId`, `description`, `avgScore`, `ratingCount`, `createdBy`, `createdAt`
+- **ratings** — `dishId`, `userId`, `score` (1-5), `comment`, `date`, `nickName`, `avatarUrl` (denormalized), `createdAt`, `updatedAt`
 - **admins** — `userId` (openid)
+- **users** — `userId`, `nickName`, `avatarUrl`, `createdAt`, `updatedAt`
 
 ### Key Patterns
 
 - Admin authorization is enforced server-side in cloud functions by checking the `admins` collection
 - One rating per user per dish per day; submitting again updates the existing rating
-- Average score is recalculated incrementally on each rating submission
-- Image uploads go to WeChat Cloud Storage; `imageFileId` is stored on the dish record
+- Average score is recalculated from all ratings on each submission (not incremental)
+- Image uploads go to WeChat Cloud Storage; `imageFileId` is stored on the dish record; old images are deleted on update/delete
+- User nickname and avatar are denormalized into rating records for display
+- Cloud DB queries use 100-item pagination and 500-item limits for `in()` operations
 - UI theme: orange primary (#FF8C42), warm background (#FFF5EE)

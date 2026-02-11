@@ -3,38 +3,15 @@
   <view class="form-section card">
     <view class="section-title">添加菜品</view>
 
-    <!-- 菜名输入 + 历史搜索 -->
+    <!-- 菜名输入 -->
     <view class="form-item">
       <text class="form-label">菜名</text>
       <input
         class="form-input"
-        placeholder="输入菜名（可搜索历史菜品）"
+        placeholder="输入菜名"
         value="{{dishName}}"
         bindinput="onNameInput"
       />
-    </view>
-
-    <!-- 历史菜品搜索提示 -->
-    <view class="form-item" style="position: relative;">
-      <text class="form-label">复用历史</text>
-      <input
-        class="form-input"
-        placeholder="搜索历史菜品名"
-        value="{{historyKeyword}}"
-        bindinput="onHistoryInput"
-      />
-      <view wx:if="{{showHistory && historyResults.length > 0}}" class="history-dropdown">
-        <view
-          class="history-option"
-          wx:for="{{historyResults}}"
-          wx:key="_id"
-          data-name="{{item.name}}"
-          bindtap="onPickHistory"
-        >
-          <text>{{item.name}}</text>
-          <text class="history-date-hint">{{item.date}}</text>
-        </view>
-      </view>
     </view>
 
     <!-- 餐次选择 -->
@@ -75,6 +52,8 @@
     >
       {{submitting ? '添加中...' : '添加菜品'}}
     </button>
+
+    <button class="btn-import" bindtap="onOpenImport">从历史导入</button>
   </view>
 
   <!-- 当日菜品列表 -->
@@ -135,6 +114,62 @@
         <button class="btn-cancel" bindtap="onCloseEdit">取消</button>
         <button class="btn-primary" bindtap="onSubmitEdit" disabled="{{editSubmitting}}">
           {{editSubmitting ? '保存中...' : '保存'}}
+        </button>
+      </view>
+    </view>
+  </view>
+
+  <!-- 历史导入弹窗 -->
+  <view class="import-mask" wx:if="{{showImportPopup}}" bindtap="onCloseImport">
+    <view class="import-popup card" catchtap>
+      <view class="import-header">
+        <view class="section-title">从历史导入（{{mealOptions[mealIndex]}}）</view>
+        <view class="import-close" bindtap="onCloseImport">✕</view>
+      </view>
+
+      <input
+        class="form-input import-search"
+        placeholder="搜索菜品名"
+        value="{{importKeyword}}"
+        bindinput="onImportSearch"
+      />
+
+      <scroll-view class="import-list" scroll-y>
+        <view wx:if="{{importLoading}}" class="loading-wrap">
+          <text class="loading-text">加载中...</text>
+        </view>
+        <block wx:elif="{{importList.length > 0}}">
+          <view
+            class="import-item {{importSelected[index] ? 'import-item-selected' : ''}}"
+            wx:for="{{importList}}"
+            wx:key="name"
+            data-idx="{{index}}"
+            bindtap="onToggleImportItem"
+          >
+            <view class="import-check">{{importSelected[index] ? '☑' : '☐'}}</view>
+            <image
+              wx:if="{{item.lastImageFileId}}"
+              class="import-thumb"
+              src="{{item.lastImageFileId}}"
+              mode="aspectFill"
+            />
+            <view class="import-info">
+              <text class="import-name">{{item.name}}</text>
+              <text class="import-date">最近：{{item.lastDate}}</text>
+            </view>
+          </view>
+        </block>
+        <empty-state wx:else message="暂无历史菜品" />
+      </scroll-view>
+
+      <view class="import-footer">
+        <text class="import-count">已选 {{importSelectedCount}} 道</text>
+        <button
+          class="btn-primary import-confirm-btn"
+          bindtap="onConfirmImport"
+          disabled="{{importSubmitting || importSelectedCount === 0}}"
+        >
+          {{importSubmitting ? '添加中...' : '确认添加'}}
         </button>
       </view>
     </view>

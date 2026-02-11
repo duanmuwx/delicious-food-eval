@@ -13,10 +13,14 @@ Page({
     imageFilePath: '',
     // 今日菜品列表
     todayDishes: [],
-    // 历史菜品
-    historyKeyword: '',
-    historyResults: [],
-    showHistory: false,
+    // 历史导入弹窗
+    showImportPopup: false,
+    importKeyword: '',
+    importList: [],
+    importSelected: {},
+    importSelectedCount: 0,
+    importLoading: false,
+    importSubmitting: false,
     // 状态
     submitting: false,
     loading: true,
@@ -180,52 +184,81 @@ Page({
     })
   },
 
-  // 历史菜品搜索
-  onHistoryInput: function (e) {
+  // 历史导入弹窗
+  onOpenImport: function () {
+    this.setData({
+      showImportPopup: true,
+      importKeyword: '',
+      importSelected: {},
+      importSelectedCount: 0
+    })
+    this.loadImportList('')
+  },
+
+  onCloseImport: function () {
+    this.setData({ showImportPopup: false })
+  },
+
+  onImportSearch: function (e) {
     var keyword = e.detail.value.trim()
-    this.setData({ historyKeyword: keyword })
-    if (!keyword) {
-      this.setData({ historyResults: [], showHistory: false })
+    this.setData({ importKeyword: keyword, importSelected: {}, importSelectedCount: 0 })
+    this.loadImportList(keyword)
+  },
+
+  loadImportList: function (keyword) {
+    var that = this
+    that.setData({ importLoading: true })
+    cloudUtil.callCloud('searchDishHistory', {
+      meal: that.data.mealValues[that.data.mealIndex],
+      keyword: keyword || ''
+    }).then(function (res) {
+      that.setData({ importList: res.data || [], importLoading: false })
+    }).catch(function () {
+      that.setData({ importList: [], importLoading: false })
+    })
+  },
+
+  onToggleImportItem: function (e) {
+    var idx = e.currentTarget.dataset.idx
+    var key = 'importSelected.' + idx
+    var selected = !this.data.importSelected[idx]
+    var countDelta = selected ? 1 : -1
+    this.setData({
+      [key]: selected,
+      importSelectedCount: this.data.importSelectedCount + countDelta
+    })
+  },
+
+  onConfirmImport: function () {
+    var that = this
+    var selected = that.data.importSelected
+    var list = that.data.importList
+    var dishes = []
+    for (var i = 0; i < list.length; i++) {
+      if (selected[i]) {
+        dishes.push({
+          name: list[i].name,
+          meal: that.data.mealValues[that.data.mealIndex],
+          date: that.data.date,
+          imageFileId: list[i].lastImageFileId
+        })
+      }
+    }
+    if (!dishes.length) {
+      wx.showToast({ title: '请选择菜品', icon: 'none' })
       return
     }
-    this.searchHistory(keyword)
-  },
-
-  searchHistory: function (keyword) {
-    var that = this
-    var db = wx.cloud.database()
-    db.collection('dishes')
-      .where({
-        name: db.RegExp({
-          regexp: keyword,
-          options: 'i'
-        })
-      })
-      .orderBy('date', 'desc')
-      .limit(20)
-      .get()
+    that.setData({ importSubmitting: true })
+    cloudUtil.callCloud('batchAddDish', { dishes: dishes })
       .then(function (res) {
-        // 去重：只保留每个菜名的最新一条
-        var seen = {}
-        var unique = []
-        res.data.forEach(function (d) {
-          if (!seen[d.name]) {
-            seen[d.name] = true
-            unique.push(d)
-          }
-        })
-        that.setData({ historyResults: unique, showHistory: true })
+        wx.showToast({ title: '已添加' + res.added + '道菜', icon: 'success' })
+        that.setData({ showImportPopup: false, importSubmitting: false })
+        that.loadTodayDishes()
       })
-  },
-
-  onPickHistory: function (e) {
-    var name = e.currentTarget.dataset.name
-    this.setData({
-      dishName: name,
-      historyKeyword: '',
-      historyResults: [],
-      showHistory: false
-    })
+      .catch(function () {
+        wx.showToast({ title: '添加失败', icon: 'none' })
+        that.setData({ importSubmitting: false })
+      })
   },
 
   // 编辑菜品
