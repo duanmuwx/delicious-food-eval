@@ -48,10 +48,10 @@ Page({
   },
 
   onDishTap: function (e) {
-    var dishId = e.currentTarget.dataset.dishId
+    var dishIds = e.currentTarget.dataset.dishIds
     var dishName = e.currentTarget.dataset.dishName
     wx.navigateTo({
-      url: '/pages/dish-comments/dish-comments?dishId=' + dishId + '&dishName=' + encodeURIComponent(dishName)
+      url: '/pages/dish-comments/dish-comments?dishIds=' + encodeURIComponent(JSON.stringify(dishIds)) + '&dishName=' + encodeURIComponent(dishName)
     })
   }
 })

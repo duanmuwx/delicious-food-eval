@@ -4,13 +4,22 @@ var cloudUtil = require('../../utils/cloud')
 Page({
   data: {
     dishId: '',
+    dishIds: [],
     dish: null,
     comments: [],
     loading: true
   },
 
   onLoad: function (options) {
-    this.setData({ dishId: options.dishId })
+    // 支持单个 dishId 或多个 dishIds（JSON数组字符串）
+    var dishIds = []
+    if (options.dishIds) {
+      try { dishIds = JSON.parse(decodeURIComponent(options.dishIds)) } catch (e) { dishIds = [] }
+    }
+    if (dishIds.length === 0 && options.dishId) {
+      dishIds = [options.dishId]
+    }
+    this.setData({ dishId: dishIds[0] || '', dishIds: dishIds })
     this.loadComments()
   },
 
@@ -19,7 +28,8 @@ Page({
     that.setData({ loading: true })
     auth.ensureLogin().then(function () {
       return cloudUtil.callCloud('getDishRatings', {
-        dishId: that.data.dishId
+        dishId: that.data.dishId,
+        dishIds: that.data.dishIds
       })
     }).then(function (res) {
       var dish = res.dish || {}

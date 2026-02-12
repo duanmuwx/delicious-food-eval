@@ -29,15 +29,15 @@
       </view>
 
       <view
-        class="grid-meal-cell {{item.meals[mealKey] > 0 ? 'grid-cell-filled' : 'grid-cell-empty'}}"
-        wx:for="{{mealKeys}}"
-        wx:for-item="mealKey"
-        wx:key="*this"
+        class="grid-meal-cell {{meal.count > 0 ? 'grid-cell-filled' : 'grid-cell-empty'}}"
+        wx:for="{{item.meals}}"
+        wx:for-item="meal"
+        wx:key="key"
         data-date="{{item.date}}"
-        data-meal="{{mealKey}}"
+        data-meal="{{meal.key}}"
         bindtap="onCellTap"
       >
-        <text wx:if="{{item.meals[mealKey] > 0}}" class="cell-count">{{item.meals[mealKey]}}</text>
+        <text wx:if="{{meal.count > 0}}" class="cell-count">{{meal.count}}</text>
         <text wx:else class="cell-empty-icon">+</text>
       </view>
     </view>

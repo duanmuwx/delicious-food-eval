@@ -31,6 +31,22 @@ function getMonthRange() {
   return { start: formatDate(start), end: formatDate(end) }
 }
 
+// 分页获取所有符合条件的菜品（单次上限100条）
+async function getAllDishes(where) {
+  var all = []
+  var batchSize = 100
+  while (true) {
+    var res = await db.collection('dishes')
+      .where(where)
+      .skip(all.length)
+      .limit(batchSize)
+      .get()
+    all = all.concat(res.data)
+    if (res.data.length < batchSize) break
+  }
+  return all
+}
+
 exports.main = async (event, context) => {
   const { type } = event
 
@@ -42,20 +58,58 @@ exports.main = async (event, context) => {
       range = getWeekRange()
     }
 
-    // 查询日期范围内、有评分的菜品，按平均分降序，取前10
-    const res = await db.collection('dishes')
-      .where({
-        date: _.gte(range.start).and(_.lte(range.end)),
-        ratingCount: _.gt(0)
-      })
-      .orderBy('avgScore', 'desc')
-      .orderBy('ratingCount', 'desc')
-      .limit(10)
-      .get()
+    // 查询日期范围内、有评分的所有菜品
+    var dishes = await getAllDishes({
+      date: _.gte(range.start).and(_.lte(range.end)),
+      ratingCount: _.gt(0)
+    })
+
+    // 按菜名聚合：加权平均分，累计人数，收集所有dishId
+    var grouped = {}
+    dishes.forEach(function (d) {
+      var key = d.name
+      if (!grouped[key]) {
+        grouped[key] = {
+          name: d.name,
+          imageFileId: d.imageFileId || '',
+          totalScore: 0,
+          totalCount: 0,
+          appearCount: 0,
+          dishIds: []
+        }
+      }
+      var g = grouped[key]
+      g.totalScore += (d.avgScore || 0) * (d.ratingCount || 0)
+      g.totalCount += d.ratingCount || 0
+      g.appearCount += 1
+      g.dishIds.push(d._id)
+      // 优先使用有图片的记录
+      if (!g.imageFileId && d.imageFileId) {
+        g.imageFileId = d.imageFileId
+      }
+    })
+
+    // 计算加权平均分并排序
+    var rankList = Object.values(grouped).map(function (g) {
+      var avg = g.totalCount > 0 ? Math.round((g.totalScore / g.totalCount) * 10) / 10 : 0
+      return {
+        name: g.name,
+        imageFileId: g.imageFileId,
+        avgScore: avg,
+        ratingCount: g.totalCount,
+        appearCount: g.appearCount,
+        dishIds: g.dishIds
+      }
+    })
+
+    rankList.sort(function (a, b) {
+      if (b.avgScore !== a.avgScore) return b.avgScore - a.avgScore
+      return b.ratingCount - a.ratingCount
+    })
 
     return {
       code: 0,
-      data: res.data
+      data: rankList.slice(0, 10)
     }
   } catch (err) {
     console.error('getRanking error:', err)

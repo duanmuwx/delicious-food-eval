@@ -26,8 +26,8 @@
       <view
         class="rank-item card"
         wx:for="{{rankList}}"
-        wx:key="_id"
-        data-dish-id="{{item._id}}"
+        wx:key="name"
+        data-dish-ids="{{item.dishIds}}"
         data-dish-name="{{item.name}}"
         bindtap="onDishTap"
       >
@@ -47,7 +47,7 @@
           <text class="rank-dish-name">{{item.name}}</text>
           <view class="rank-stats">
             <text class="rank-score">{{item.avgScoreText}}分</text>
-            <text class="rank-count">{{item.ratingCount}}人评价</text>
+            <text class="rank-count">出现{{item.appearCount}}次，共{{item.ratingCount}}人评价</text>
           </view>
         </view>
         <view class="rank-star">

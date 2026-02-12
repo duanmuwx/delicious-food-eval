@@ -70,15 +70,21 @@ Page({
           }
         }
 
+        var mealKeys = that.data.mealKeys
         var days = []
         for (var j = 0; j < range.dates.length; j++) {
           var date = range.dates[j]
+          var cm = countMap[date] || { breakfast: 0, lunch: 0, dinner: 0 }
+          var mealsArr = []
+          for (var k = 0; k < mealKeys.length; k++) {
+            mealsArr.push({ key: mealKeys[k], count: cm[mealKeys[k]] || 0 })
+          }
           days.push({
             date: date,
             label: dateUtil.formatDateChinese(date),
             dayLabel: dateUtil.getDayOfWeekLabel(date),
             isToday: date === that.data.today,
-            meals: countMap[date] || { breakfast: 0, lunch: 0, dinner: 0 }
+            meals: mealsArr
           })
         }
 
