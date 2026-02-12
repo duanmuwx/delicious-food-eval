@@ -35,15 +35,6 @@
   margin-bottom: 8rpx;
 }
 
-.star-char {
-  font-size: 28rpx;
-  color: var(--color-star-inactive);
-  margin-right: 2rpx;
-}
-
-.star-char.active {
-  color: var(--color-star-active);
-}
 
 .rating-score {
   font-size: 26rpx;
@@ -62,23 +53,4 @@
   display: flex;
   justify-content: flex-end;
   margin-top: 12rpx;
-}
-
-.delete-rating-btn {
-  font-size: 24rpx;
-  color: var(--color-danger);
-  padding: 6rpx 20rpx;
-  border: 1rpx solid var(--color-danger);
-  border-radius: 8rpx;
-}
-
-.loading-wrap {
-  display: flex;
-  justify-content: center;
-  padding: 100rpx 0;
-}
-
-.loading-text {
-  font-size: 28rpx;
-  color: var(--color-text-secondary);
 }

@@ -17,16 +17,6 @@
   margin-top: 8rpx;
 }
 
-.loading-wrap {
-  display: flex;
-  justify-content: center;
-  padding: 100rpx 0;
-}
-
-.loading-text {
-  font-size: 28rpx;
-  color: var(--color-text-secondary);
-}
 
 .bottom-bar {
   padding: 32rpx 24rpx;

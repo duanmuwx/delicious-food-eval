@@ -50,3 +50,56 @@ page {
 .btn-primary:active {
   background: var(--color-primary-dark);
 }
+
+/* 图片占位符 */
+.image-placeholder {
+  background: #F0F0F0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.placeholder-text {
+  font-size: 22rpx;
+  color: var(--color-text-secondary);
+}
+
+/* 按钮体系 */
+.btn-outline {
+  background: #FFFFFF;
+  color: var(--color-primary);
+  border: 2rpx solid var(--color-primary);
+  border-radius: 12rpx;
+  padding: 16rpx 40rpx;
+  font-size: 28rpx;
+  text-align: center;
+}
+
+.btn-secondary {
+  background: var(--color-bg);
+  color: var(--color-text-secondary);
+  border: none;
+  border-radius: 12rpx;
+  padding: 16rpx 40rpx;
+  font-size: 28rpx;
+  text-align: center;
+}
+
+.btn-danger {
+  font-size: 24rpx;
+  color: var(--color-danger);
+  padding: 6rpx 20rpx;
+  border: 1rpx solid var(--color-danger);
+  border-radius: 8rpx;
+}
+
+.loading-wrap {
+  display: flex;
+  justify-content: center;
+  padding: 100rpx 0;
+}
+
+.loading-text {
+  font-size: 28rpx;
+  color: var(--color-text-secondary);
+}

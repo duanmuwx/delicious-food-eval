@@ -13,16 +13,6 @@
   margin-bottom: 30rpx;
 }
 
-.loading-wrap {
-  display: flex;
-  justify-content: center;
-  padding: 100rpx 0;
-}
-
-.loading-text {
-  font-size: 28rpx;
-  color: var(--color-text-secondary);
-}
 
 .subscribe-btn {
   padding: 6rpx 20rpx;

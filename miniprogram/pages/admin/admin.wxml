@@ -59,7 +59,7 @@
       {{submitting ? '添加中...' : '添加菜品'}}
     </button>
 
-    <button class="btn-import" bindtap="onOpenImport">从历史导入</button>
+    <button class="btn-outline submit-btn" bindtap="onOpenImport">从历史导入</button>
   </view>
 
   <!-- 当日菜品列表（按餐次分组） -->
@@ -135,7 +135,7 @@
       </view>
 
       <view class="modal-btns">
-        <button class="btn-cancel" bindtap="onCloseEdit">取消</button>
+        <button class="btn-secondary" bindtap="onCloseEdit">取消</button>
         <button class="btn-primary" bindtap="onSubmitEdit" disabled="{{editSubmitting}}">
           {{editSubmitting ? '保存中...' : '保存'}}
         </button>

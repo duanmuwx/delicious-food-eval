@@ -2,6 +2,7 @@
   "navigationBarTitleText": "我的",
   "enablePullDownRefresh": true,
   "usingComponents": {
+    "star-rating": "../../components/star-rating/star-rating",
     "empty-state": "../../components/empty-state/empty-state"
   }
 }

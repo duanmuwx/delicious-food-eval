@@ -140,12 +140,5 @@
 }
 
 .loading-wrap {
-  display: flex;
-  justify-content: center;
   padding: 200rpx 0;
-}
-
-.loading-text {
-  font-size: 28rpx;
-  color: var(--color-text-secondary);
 }

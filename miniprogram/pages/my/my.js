@@ -9,7 +9,10 @@ Page({
     nickName: '',
     avatarUrl: '',
     ratingHistory: [],
-    loading: true
+    loading: true,
+    totalRatings: 0,
+    totalDishes: 0,
+    weekRatings: 0
   },
 
   onShow: function () {
@@ -26,6 +29,7 @@ Page({
         nickName: auth.getProfile().nickName,
         avatarUrl: auth.getProfile().avatarUrl
       })
+      that.loadStats(openid)
       var db = wx.cloud.database()
       // 查询用户的评分历史，按日期倒序
       return db.collection('ratings')
@@ -74,6 +78,33 @@ Page({
     }).catch(function (err) {
       console.error('loadData error:', err)
       that.setData({ loading: false })
+    })
+  },
+
+  loadStats: function (openid) {
+    var that = this
+    var db = wx.cloud.database()
+    var _ = db.command
+    var weekRange = dateUtil.getWeekRange()
+
+    // 总评价数
+    db.collection('ratings').where({ userId: openid }).count().then(function (res) {
+      that.setData({ totalRatings: res.total })
+    })
+
+    // 评价菜品数（去重 dishId）
+    db.collection('ratings').where({ userId: openid }).field({ dishId: true }).limit(500).get().then(function (res) {
+      var ids = {}
+      res.data.forEach(function (r) { ids[r.dishId] = true })
+      that.setData({ totalDishes: Object.keys(ids).length })
+    })
+
+    // 本周评价数
+    db.collection('ratings').where({
+      userId: openid,
+      date: _.gte(weekRange.start).and(_.lte(weekRange.end))
+    }).count().then(function (res) {
+      that.setData({ weekRatings: res.total })
     })
   },
 
