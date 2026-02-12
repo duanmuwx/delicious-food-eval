@@ -59,6 +59,9 @@ Page({
       .field({ date: true, meal: true })
       .get()
       .then(function (res) {
+        console.log('[weekly] query range:', range.start, '-', range.end)
+        console.log('[weekly] query returned', res.data.length, 'dishes')
+        console.log('[weekly] dishes:', JSON.stringify(res.data.map(function(d) { return { date: d.date, meal: d.meal, id: d._id } })))
         var countMap = {}
         for (var i = 0; i < res.data.length; i++) {
           var dish = res.data[i]
@@ -70,6 +73,7 @@ Page({
           }
         }
 
+        console.log('[weekly] countMap:', JSON.stringify(countMap))
         var mealKeys = that.data.mealKeys
         var days = []
         for (var j = 0; j < range.dates.length; j++) {
