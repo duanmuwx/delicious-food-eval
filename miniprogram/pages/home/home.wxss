@@ -23,3 +23,29 @@
   font-size: 28rpx;
   color: var(--color-text-secondary);
 }
+
+.subscribe-btn {
+  padding: 6rpx 20rpx;
+  font-size: 22rpx;
+  color: var(--color-primary);
+  background: #FFF0E5;
+  border-radius: 30rpx;
+  border: 1rpx solid var(--color-primary-light);
+}
+
+.subscribe-btn.subscribed {
+  color: var(--color-text-secondary);
+  background: #F5F5F5;
+  border-color: #E0E0E0;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20rpx;
+}
+
+.section-header .section-title {
+  margin-bottom: 0;
+}

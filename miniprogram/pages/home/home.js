@@ -1,6 +1,10 @@
 var dateUtil = require('../../utils/date')
 var auth = require('../../utils/auth')
 var shareUtil = require('../../utils/share')
+var cloudUtil = require('../../utils/cloud')
+
+// 模板 ID，需要替换为微信公众平台申请的实际模板 ID
+var SUBSCRIBE_TMPL_ID = 'YOUR_TEMPLATE_ID'
 
 Page({
   data: {
@@ -9,7 +13,9 @@ Page({
     breakfastDishes: [],
     lunchDishes: [],
     dinnerDishes: [],
-    loading: true
+    loading: true,
+    lunchSubscribed: false,
+    dinnerSubscribed: false
   },
 
   onLoad: function () {
@@ -57,6 +63,26 @@ Page({
     var that = this
     that.loadDishes()
     wx.stopPullDownRefresh()
+  },
+
+  onSubscribeTap: function (e) {
+    var that = this
+    var meal = e.currentTarget.dataset.meal
+    wx.requestSubscribeMessage({
+      tmplIds: [SUBSCRIBE_TMPL_ID],
+      success: function (res) {
+        if (res[SUBSCRIBE_TMPL_ID] === 'accept') {
+          cloudUtil.callCloud('subscribeMenu', { action: 'subscribe', meal: meal }).then(function () {
+            var key = meal + 'Subscribed'
+            var update = {}
+            update[key] = true
+            that.setData(update)
+            var label = meal === 'lunch' ? '午餐' : '晚餐'
+            wx.showToast({ title: '已订阅明日' + label + '提醒', icon: 'none' })
+          })
+        }
+      }
+    })
   },
 
   onShareAppMessage: function () {

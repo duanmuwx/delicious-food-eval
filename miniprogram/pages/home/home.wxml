@@ -24,7 +24,12 @@
 
     <!-- 午餐 -->
     <view class="section">
-      <view class="section-title">☀️ 午餐</view>
+      <view class="section-header">
+        <view class="section-title">☀️ 午餐</view>
+        <view class="subscribe-btn {{lunchSubscribed ? 'subscribed' : ''}}" data-meal="lunch" bindtap="onSubscribeTap">
+          <text>{{lunchSubscribed ? '✓ 已订阅' : '🔔 订阅提醒'}}</text>
+        </view>
+      </view>
       <block wx:if="{{lunchDishes.length > 0}}">
         <dish-card
           wx:for="{{lunchDishes}}"
@@ -38,7 +43,12 @@
 
     <!-- 晚餐 -->
     <view class="section">
-      <view class="section-title">🌙 晚餐</view>
+      <view class="section-header">
+        <view class="section-title">🌙 晚餐</view>
+        <view class="subscribe-btn {{dinnerSubscribed ? 'subscribed' : ''}}" data-meal="dinner" bindtap="onSubscribeTap">
+          <text>{{dinnerSubscribed ? '✓ 已订阅' : '🔔 订阅提醒'}}</text>
+        </view>
+      </view>
       <block wx:if="{{dinnerDishes.length > 0}}">
         <dish-card
           wx:for="{{dinnerDishes}}"
