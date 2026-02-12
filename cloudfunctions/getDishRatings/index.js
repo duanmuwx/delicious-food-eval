@@ -8,6 +8,8 @@ const db = cloud.database()
 const _ = db.command
 
 exports.main = async (event, context) => {
+  const wxContext = cloud.getWXContext()
+  const openid = wxContext.OPENID
   const { dishId, dishIds } = event
 
   // 支持单个 dishId 或多个 dishIds
@@ -87,6 +89,7 @@ exports.main = async (event, context) => {
     // 组装评论列表
     var comments = allRatings.map(function (r) {
       var user = userMap[r.userId] || {}
+      var likedBy = r.likedBy || []
       return {
         _id: r._id,
         score: r.score,
@@ -94,7 +97,10 @@ exports.main = async (event, context) => {
         date: r.date,
         createdAt: r.createdAt,
         nickName: r.nickName || user.nickName || '',
-        avatarUrl: r.avatarUrl || user.avatarUrl || ''
+        avatarUrl: r.avatarUrl || user.avatarUrl || '',
+        likeCount: r.likeCount || 0,
+        liked: likedBy.indexOf(openid) !== -1,
+        isOwn: r.userId === openid
       }
     })
 

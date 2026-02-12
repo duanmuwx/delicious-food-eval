@@ -183,6 +183,48 @@
   line-height: 1.6;
 }
 
+/* 点赞 */
+.comment-footer {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 12rpx;
+}
+
+.like-btn {
+  display: flex;
+  align-items: center;
+  padding: 8rpx 16rpx;
+  border-radius: 24rpx;
+  background: #F5F5F5;
+}
+
+.like-btn.liked {
+  background: #FFF0F0;
+}
+
+.like-btn.like-btn-disabled {
+  opacity: 0.4;
+}
+
+.like-icon {
+  font-size: 28rpx;
+  color: #999;
+}
+
+.like-btn.liked .like-icon {
+  color: #FF4D4F;
+}
+
+.like-count {
+  font-size: 24rpx;
+  color: #999;
+  margin-left: 6rpx;
+}
+
+.like-btn.liked .like-count {
+  color: #FF4D4F;
+}
+
 /* 加载状态 */
 .loading-wrap {
   display: flex;

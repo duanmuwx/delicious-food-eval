@@ -65,6 +65,17 @@
             <text class="comment-score">{{item.score}}分</text>
           </view>
           <text wx:if="{{item.comment}}" class="comment-text">{{item.comment}}</text>
+          <view class="comment-footer">
+            <view
+              class="like-btn {{item.liked ? 'liked' : ''}} {{item.isOwn ? 'like-btn-disabled' : ''}}"
+              data-id="{{item._id}}"
+              data-index="{{index}}"
+              bindtap="onToggleLike"
+            >
+              <text class="like-icon">{{item.liked ? '❤' : '♡'}}</text>
+              <text class="like-count" wx:if="{{item.likeCount > 0}}">{{item.likeCount}}</text>
+            </view>
+          </view>
         </view>
       </view>
     </view>

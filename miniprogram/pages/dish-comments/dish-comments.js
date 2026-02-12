@@ -39,7 +39,6 @@ Page({
       var comments = (res.comments || []).map(function (c) {
         var displayName = c.nickName || '匿名用户'
         var displayAvatar = c.avatarUrl || ''
-        // 格式化时间
         var dateText = c.date || ''
         return {
           _id: c._id,
@@ -47,7 +46,10 @@ Page({
           avatarUrl: displayAvatar,
           score: c.score,
           comment: c.comment,
-          dateText: dateText
+          dateText: dateText,
+          likeCount: c.likeCount || 0,
+          liked: !!c.liked,
+          isOwn: !!c.isOwn
         }
       })
 
@@ -65,5 +67,31 @@ Page({
   onPullDownRefresh: function () {
     this.loadComments()
     wx.stopPullDownRefresh()
+  },
+
+  onToggleLike: function (e) {
+    var that = this
+    var ratingId = e.currentTarget.dataset.id
+    var index = e.currentTarget.dataset.index
+    var comment = that.data.comments[index]
+    if (comment.isOwn) return
+
+    // 乐观更新
+    var newLiked = !comment.liked
+    var newCount = comment.likeCount + (newLiked ? 1 : -1)
+    var key1 = 'comments[' + index + '].liked'
+    var key2 = 'comments[' + index + '].likeCount'
+    var update = {}
+    update[key1] = newLiked
+    update[key2] = newCount
+    that.setData(update)
+
+    cloudUtil.callCloud('toggleCommentLike', { ratingId: ratingId }).catch(function () {
+      // 回滚
+      var rollback = {}
+      rollback[key1] = comment.liked
+      rollback[key2] = comment.likeCount
+      that.setData(rollback)
+    })
   }
 })
