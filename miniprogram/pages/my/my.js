@@ -66,7 +66,7 @@ Page({
               score: r.score,
               comment: r.comment || '',
               date: r.date,
-              dateDisplay: dateUtil.formatDateChinese(r.date)
+              dateDisplay: r.createdAt ? dateUtil.formatDateTime(r.createdAt) : (r.date ? dateUtil.formatDateChinese(r.date) : '')
             }
           })
           that.setData({ ratingHistory: history, loading: false })

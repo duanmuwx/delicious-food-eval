@@ -51,6 +51,13 @@ function getDayOfWeekLabel(dateStr) {
   return labels[d.getDay()]
 }
 
+function formatDateTime(dt) {
+  var d = dt instanceof Date ? dt : new Date(dt)
+  var h = String(d.getHours()).padStart(2, '0')
+  var m = String(d.getMinutes()).padStart(2, '0')
+  return formatDate(d) + ' ' + h + ':' + m
+}
+
 module.exports = {
   getToday: getToday,
   formatDate: formatDate,
@@ -58,5 +65,6 @@ module.exports = {
   getMonthRange: getMonthRange,
   formatDateChinese: formatDateChinese,
   getWeekRangeByOffset: getWeekRangeByOffset,
-  getDayOfWeekLabel: getDayOfWeekLabel
+  getDayOfWeekLabel: getDayOfWeekLabel,
+  formatDateTime: formatDateTime
 }

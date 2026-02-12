@@ -1,5 +1,6 @@
 var auth = require('../../utils/auth')
 var cloudUtil = require('../../utils/cloud')
+var dateUtil = require('../../utils/date')
 
 Page({
   data: {
@@ -40,7 +41,7 @@ Page({
           userId: maskedUid,
           score: r.score,
           comment: r.comment || '',
-          date: r.date
+          date: r.createdAt ? dateUtil.formatDateTime(r.createdAt) : r.date
         }
       })
       that.setData({ ratings: ratings, loading: false })

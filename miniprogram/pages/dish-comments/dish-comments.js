@@ -1,5 +1,6 @@
 var auth = require('../../utils/auth')
 var cloudUtil = require('../../utils/cloud')
+var dateUtil = require('../../utils/date')
 
 Page({
   data: {
@@ -39,7 +40,7 @@ Page({
       var comments = (res.comments || []).map(function (c) {
         var displayName = c.nickName || '匿名用户'
         var displayAvatar = c.avatarUrl || ''
-        var dateText = c.date || ''
+        var dateText = c.createdAt ? dateUtil.formatDateTime(c.createdAt) : (c.date || '')
         return {
           _id: c._id,
           nickName: displayName,
