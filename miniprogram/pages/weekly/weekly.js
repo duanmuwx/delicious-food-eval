@@ -41,6 +41,22 @@ Page({
     this.loadWeek()
   },
 
+  // 分页获取所有匹配的dishes（客户端每次最多返回20条）
+  _fetchAllDishes: function (query) {
+    var all = []
+    var batchSize = 20
+    function fetch(skip) {
+      return query.skip(skip).limit(batchSize).get().then(function (res) {
+        all = all.concat(res.data)
+        if (res.data.length === batchSize) {
+          return fetch(skip + batchSize)
+        }
+        return all
+      })
+    }
+    return fetch(0)
+  },
+
   loadWeek: function () {
     var that = this
     that.setData({ loading: true })
@@ -51,20 +67,17 @@ Page({
 
     var db = wx.cloud.database()
     var _ = db.command
-    db.collection('dishes')
+    var query = db.collection('dishes')
       .where({
         date: _.gte(range.start).and(_.lte(range.end))
       })
-      .limit(100)
       .field({ date: true, meal: true })
-      .get()
-      .then(function (res) {
-        console.log('[weekly] query range:', range.start, '-', range.end)
-        console.log('[weekly] query returned', res.data.length, 'dishes')
-        console.log('[weekly] dishes:', JSON.stringify(res.data.map(function(d) { return { date: d.date, meal: d.meal, id: d._id } })))
+
+    that._fetchAllDishes(query)
+      .then(function (allDishes) {
         var countMap = {}
-        for (var i = 0; i < res.data.length; i++) {
-          var dish = res.data[i]
+        for (var i = 0; i < allDishes.length; i++) {
+          var dish = allDishes[i]
           if (!countMap[dish.date]) {
             countMap[dish.date] = { breakfast: 0, lunch: 0, dinner: 0 }
           }
@@ -73,7 +86,6 @@ Page({
           }
         }
 
-        console.log('[weekly] countMap:', JSON.stringify(countMap))
         var mealKeys = that.data.mealKeys
         var days = []
         for (var j = 0; j < range.dates.length; j++) {
