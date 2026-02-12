@@ -47,8 +47,24 @@
 .dish-name {
   font-size: 32rpx;
   font-weight: 500;
-  margin-bottom: 8rpx;
   display: block;
+}
+
+.dish-name-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8rpx;
+}
+
+.high-score-badge {
+  font-size: 20rpx;
+  color: #fff;
+  background: linear-gradient(135deg, #FFB800, #FF8C42);
+  padding: 2rpx 10rpx;
+  border-radius: 6rpx;
+  margin-left: 10rpx;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .dish-score-row {

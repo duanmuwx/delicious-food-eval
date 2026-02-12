@@ -25,15 +25,34 @@ exports.main = async (event) => {
   for (var i = 0; i < dishes.length; i++) {
     var d = dishes[i]
     if (!d.name || !d.meal || !d.date) continue
+    var trimmedName = d.name.trim()
+
+    // 查历史同名菜品的加权均分，判断是否为高分菜品
+    var isHighScore = false
+    var historyRes = await db.collection('dishes')
+      .where({ name: trimmedName, ratingCount: db.command.gt(0) })
+      .field({ avgScore: true, ratingCount: true })
+      .limit(100)
+      .get()
+    if (historyRes.data.length > 0) {
+      var totalScore = 0, totalCount = 0
+      historyRes.data.forEach(function (h) {
+        totalScore += h.avgScore * h.ratingCount
+        totalCount += h.ratingCount
+      })
+      isHighScore = totalCount > 0 && (totalScore / totalCount) >= 4.5
+    }
+
     await db.collection('dishes').add({
       data: {
-        name: d.name.trim(),
+        name: trimmedName,
         meal: d.meal,
         date: d.date,
         imageFileId: d.imageFileId || '',
         description: '',
         avgScore: 0,
         ratingCount: 0,
+        isHighScore: isHighScore,
         createdBy: openid,
         createdAt: db.serverDate()
       }

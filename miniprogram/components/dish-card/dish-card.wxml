@@ -11,7 +11,10 @@
       <text class="placeholder-text">拍一张</text>
     </view>
     <view class="dish-info">
-      <text class="dish-name">{{dish.name}}</text>
+      <view class="dish-name-row">
+        <text class="dish-name">{{dish.name}}</text>
+        <text wx:if="{{dish.isHighScore}}" class="high-score-badge">历史好评</text>
+      </view>
       <text wx:if="{{dish.description}}" class="dish-desc">{{dish.description}}</text>
       <view class="dish-score-row">
         <star-rating value="{{dish.avgScore}}" readonly="{{true}}" size="{{28}}" />

@@ -34,15 +34,33 @@ exports.main = async (event, context) => {
   }
 
   try {
+    // 查历史同名菜品的加权均分，判断是否为高分菜品
+    const trimmedName = name.trim()
+    let isHighScore = false
+    const historyRes = await db.collection('dishes')
+      .where({ name: trimmedName, ratingCount: db.command.gt(0) })
+      .field({ avgScore: true, ratingCount: true })
+      .limit(100)
+      .get()
+    if (historyRes.data.length > 0) {
+      let totalScore = 0, totalCount = 0
+      historyRes.data.forEach(d => {
+        totalScore += d.avgScore * d.ratingCount
+        totalCount += d.ratingCount
+      })
+      isHighScore = totalCount > 0 && (totalScore / totalCount) >= 4.5
+    }
+
     await db.collection('dishes').add({
       data: {
-        name: name.trim(),
+        name: trimmedName,
         meal: meal,
         date: date,
         imageFileId: imageFileId || '',
         description: description || '',
         avgScore: 0,
         ratingCount: 0,
+        isHighScore: isHighScore,
         createdBy: openid,
         createdAt: db.serverDate()
       }
