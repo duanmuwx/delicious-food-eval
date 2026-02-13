@@ -104,98 +104,94 @@
   </view>
 
   <!-- 编辑菜品弹窗 -->
-  <view class="modal-mask" wx:if="{{showEditModal}}" bindtap="onCloseEdit">
-    <view class="modal-content card" catchtap>
-      <view class="section-title">编辑菜品：{{editDish.name}}</view>
+  <modal show="{{showEditModal}}" position="center" bind:close="onCloseEdit">
+    <view class="section-title">编辑菜品：{{editDish.name}}</view>
 
-      <view class="form-item">
-        <text class="form-label">菜品描述</text>
-        <textarea
-          class="form-textarea"
-          placeholder="输入菜品描述（可选）"
-          value="{{editDescription}}"
-          bindinput="onEditDescInput"
-          maxlength="200"
-          auto-height
-        />
-      </view>
+    <view class="form-item">
+      <text class="form-label">菜品描述</text>
+      <textarea
+        class="form-textarea"
+        placeholder="输入菜品描述（可选）"
+        value="{{editDescription}}"
+        bindinput="onEditDescInput"
+        maxlength="200"
+        auto-height
+      />
+    </view>
 
-      <view class="form-item">
-        <text class="form-label">菜品图片</text>
-        <view class="image-upload-area">
-          <view wx:if="{{editImagePath}}" class="image-preview-wrap">
-            <image class="image-preview" src="{{editImagePath}}" mode="aspectFill" />
-            <view class="image-remove" bindtap="onEditRemoveImage">✕</view>
-          </view>
-          <view wx:else class="image-upload-btn" bindtap="onEditChooseImage">
-            <text class="upload-icon">+</text>
-            <text class="upload-text">拍照/选图</text>
-          </view>
+    <view class="form-item">
+      <text class="form-label">菜品图片</text>
+      <view class="image-upload-area">
+        <view wx:if="{{editImagePath}}" class="image-preview-wrap">
+          <image class="image-preview" src="{{editImagePath}}" mode="aspectFill" />
+          <view class="image-remove" bindtap="onEditRemoveImage">✕</view>
+        </view>
+        <view wx:else class="image-upload-btn" bindtap="onEditChooseImage">
+          <text class="upload-icon">+</text>
+          <text class="upload-text">拍照/选图</text>
         </view>
       </view>
-
-      <view class="modal-btns">
-        <button class="btn-secondary" bindtap="onCloseEdit">取消</button>
-        <button class="btn-primary" bindtap="onSubmitEdit" disabled="{{editSubmitting}}">
-          {{editSubmitting ? '保存中...' : '保存'}}
-        </button>
-      </view>
     </view>
-  </view>
+
+    <view class="modal-btns">
+      <button class="btn-secondary" bindtap="onCloseEdit">取消</button>
+      <button class="btn-primary" bindtap="onSubmitEdit" disabled="{{editSubmitting}}">
+        {{editSubmitting ? '保存中...' : '保存'}}
+      </button>
+    </view>
+  </modal>
 
   <!-- 历史导入弹窗 -->
-  <view class="import-mask" wx:if="{{showImportPopup}}" bindtap="onCloseImport">
-    <view class="import-popup card" catchtap>
-      <view class="import-header">
-        <view class="section-title">从历史导入（{{mealOptions[mealIndex]}}）</view>
-        <view class="import-close" bindtap="onCloseImport">✕</view>
-      </view>
-
-      <input
-        class="form-input import-search"
-        placeholder="搜索菜品名"
-        value="{{importKeyword}}"
-        bindinput="onImportSearch"
-      />
-
-      <scroll-view class="import-list" scroll-y>
-        <view wx:if="{{importLoading}}" class="loading-wrap">
-          <text class="loading-text">加载中...</text>
-        </view>
-        <block wx:elif="{{importList.length > 0}}">
-          <view
-            class="import-item {{importSelected[index] ? 'import-item-selected' : ''}}"
-            wx:for="{{importList}}"
-            wx:key="name"
-            data-idx="{{index}}"
-            bindtap="onToggleImportItem"
-          >
-            <view class="import-check">{{importSelected[index] ? '☑' : '☐'}}</view>
-            <image
-              wx:if="{{item.lastImageFileId}}"
-              class="import-thumb"
-              src="{{item.lastImageFileId}}"
-              mode="aspectFill"
-            />
-            <view class="import-info">
-              <text class="import-name">{{item.name}}</text>
-              <text class="import-date">最近：{{item.lastDate}}</text>
-            </view>
-          </view>
-        </block>
-        <empty-state wx:else message="暂无历史菜品" />
-      </scroll-view>
-
-      <view class="import-footer">
-        <text class="import-count">已选 {{importSelectedCount}} 道</text>
-        <button
-          class="btn-primary import-confirm-btn"
-          bindtap="onConfirmImport"
-          disabled="{{importSubmitting || importSelectedCount === 0}}"
-        >
-          {{importSubmitting ? '添加中...' : '确认添加'}}
-        </button>
-      </view>
+  <modal show="{{showImportPopup}}" position="bottom" bind:close="onCloseImport">
+    <view class="import-header">
+      <view class="section-title">从历史导入（{{mealOptions[mealIndex]}}）</view>
+      <view class="import-close" bindtap="onCloseImport">✕</view>
     </view>
-  </view>
+
+    <input
+      class="form-input import-search"
+      placeholder="搜索菜品名"
+      value="{{importKeyword}}"
+      bindinput="onImportSearch"
+    />
+
+    <scroll-view class="import-list" scroll-y>
+      <view wx:if="{{importLoading}}" class="loading-wrap">
+        <text class="loading-text">加载中...</text>
+      </view>
+      <block wx:elif="{{importList.length > 0}}">
+        <view
+          class="import-item {{importSelected[index] ? 'import-item-selected' : ''}}"
+          wx:for="{{importList}}"
+          wx:key="name"
+          data-idx="{{index}}"
+          bindtap="onToggleImportItem"
+        >
+          <view class="import-check">{{importSelected[index] ? '☑' : '☐'}}</view>
+          <image
+            wx:if="{{item.lastImageFileId}}"
+            class="import-thumb"
+            src="{{item.lastImageFileId}}"
+            mode="aspectFill"
+          />
+          <view class="import-info">
+            <text class="import-name">{{item.name}}</text>
+            <text class="import-date">最近：{{item.lastDate}}</text>
+          </view>
+        </view>
+      </block>
+      <empty-state wx:else message="暂无历史菜品" />
+    </scroll-view>
+
+    <view class="import-footer">
+      <text class="import-count">已选 {{importSelectedCount}} 道</text>
+      <button
+        class="btn-primary import-confirm-btn"
+        bindtap="onConfirmImport"
+        disabled="{{importSubmitting || importSelectedCount === 0}}"
+      >
+        {{importSubmitting ? '添加中...' : '确认添加'}}
+      </button>
+    </view>
+  </modal>
 </view>

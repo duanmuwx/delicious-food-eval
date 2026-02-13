@@ -1,0 +1,9 @@
+<view
+  wx:if="{{show}}"
+  class="modal-mask modal-{{position}}"
+  bindtap="onMaskTap"
+>
+  <view class="modal-body card" catchtap="onContentTap">
+    <slot />
+  </view>
+</view>

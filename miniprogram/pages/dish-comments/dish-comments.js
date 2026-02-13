@@ -27,7 +27,7 @@ Page({
   loadComments: function () {
     var that = this
     that.setData({ loading: true })
-    auth.ensureLogin().then(function () {
+    return auth.ensureLogin().then(function () {
       return cloudUtil.callCloud('getDishRatings', {
         dishId: that.data.dishId,
         dishIds: that.data.dishIds
@@ -66,8 +66,9 @@ Page({
   },
 
   onPullDownRefresh: function () {
-    this.loadComments()
-    wx.stopPullDownRefresh()
+    this.loadComments().then(function () {
+      wx.stopPullDownRefresh()
+    })
   },
 
   onToggleLike: function (e) {

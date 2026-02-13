@@ -13,6 +13,7 @@
   font-size: 28rpx;
   color: var(--color-text-secondary);
   border-radius: 12rpx;
+  transition: background 0.3s, color 0.3s;
 }
 
 .tab-item.active {

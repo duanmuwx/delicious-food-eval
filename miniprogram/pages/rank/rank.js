@@ -22,7 +22,7 @@ Page({
   loadRanking: function () {
     var that = this
     that.setData({ loading: true })
-    auth.ensureLogin().then(function () {
+    return auth.ensureLogin().then(function () {
       return cloudUtil.callCloud('getRanking', {
         type: that.data.currentTab
       })
@@ -43,8 +43,9 @@ Page({
   },
 
   onPullDownRefresh: function () {
-    this.loadRanking()
-    wx.stopPullDownRefresh()
+    this.loadRanking().then(function () {
+      wx.stopPullDownRefresh()
+    })
   },
 
   onDishTap: function (e) {

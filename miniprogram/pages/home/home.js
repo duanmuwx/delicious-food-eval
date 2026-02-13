@@ -33,7 +33,7 @@ Page({
   loadDishes: function () {
     var that = this
     that.setData({ loading: true })
-    auth.ensureLogin().then(function () {
+    return auth.ensureLogin().then(function () {
       var db = wx.cloud.database()
       return db.collection('dishes')
         .where({ date: that.data.today })
@@ -60,9 +60,9 @@ Page({
   },
 
   onPullDownRefresh: function () {
-    var that = this
-    that.loadDishes()
-    wx.stopPullDownRefresh()
+    this.loadDishes().then(function () {
+      wx.stopPullDownRefresh()
+    })
   },
 
   onSubscribeTap: function (e) {

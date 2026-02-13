@@ -122,26 +122,6 @@
   padding: 60rpx 0;
 }
 
-.modal-mask {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
-  z-index: 200;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.modal-content {
-  width: 85%;
-  max-height: 80vh;
-  overflow-y: auto;
-  padding: 32rpx 24rpx;
-}
-
 .form-textarea {
   width: 100%;
   min-height: 120rpx;
@@ -202,27 +182,6 @@
 }
 
 /* 历史导入弹窗 */
-.import-mask {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
-  z-index: 200;
-  display: flex;
-  align-items: flex-end;
-}
-
-.import-popup {
-  width: 100%;
-  max-height: 75vh;
-  border-radius: 24rpx 24rpx 0 0;
-  padding: 32rpx 24rpx 0;
-  display: flex;
-  flex-direction: column;
-}
-
 .import-header {
   display: flex;
   justify-content: space-between;

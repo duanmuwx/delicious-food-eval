@@ -2,6 +2,7 @@
   "navigationBarTitleText": "菜品管理",
   "usingComponents": {
     "dish-card": "../../components/dish-card/dish-card",
-    "empty-state": "../../components/empty-state/empty-state"
+    "empty-state": "../../components/empty-state/empty-state",
+    "modal": "../../components/modal/modal"
   }
 }
