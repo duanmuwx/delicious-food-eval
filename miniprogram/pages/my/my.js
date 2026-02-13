@@ -1,6 +1,7 @@
 var auth = require('../../utils/auth')
 var dateUtil = require('../../utils/date')
 var cloudUtil = require('../../utils/cloud')
+var cache = require('../../utils/cache')
 
 Page({
   data: {
@@ -16,7 +17,9 @@ Page({
   },
 
   onShow: function () {
-    this.loadData()
+    if (cache.needRefresh(this, 'ratings')) {
+      this.loadData()
+    }
   },
 
   loadData: function () {
@@ -42,6 +45,7 @@ Page({
       var ratings = res.data
       if (ratings.length === 0) {
         that.setData({ ratingHistory: [], loading: false })
+        cache.stamp(that)
         return
       }
       // 获取关联的菜品信息
@@ -74,6 +78,7 @@ Page({
             }
           })
           that.setData({ ratingHistory: history, loading: false })
+          cache.stamp(that)
         })
     }).catch(function (err) {
       console.error('loadData error:', err)
@@ -129,6 +134,7 @@ Page({
             ratingId: ratingId,
             dishId: dishId
           }).then(function () {
+            cache.markDirty(['dishes', 'ratings'])
             wx.showToast({ title: '已删除', icon: 'success' })
             that.loadData()
           }).catch(function () {

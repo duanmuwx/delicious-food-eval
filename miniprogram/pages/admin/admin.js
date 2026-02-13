@@ -2,6 +2,7 @@ var auth = require('../../utils/auth')
 var dateUtil = require('../../utils/date')
 var cloudUtil = require('../../utils/cloud')
 var shareUtil = require('../../utils/share')
+var cache = require('../../utils/cache')
 
 Page({
   data: {
@@ -63,7 +64,7 @@ Page({
   },
 
   onShow: function () {
-    if (auth.isAdmin() && this.data.date) {
+    if (auth.isAdmin() && this.data.date && cache.needRefresh(this, 'dishes')) {
       this.loadTodayDishes()
     }
   },
@@ -82,6 +83,7 @@ Page({
         var dishes = res.data
         var mealGroups = that._buildMealGroups(dishes)
         that.setData({ todayDishes: dishes, mealGroups: mealGroups, loading: false })
+        cache.stamp(that)
       })
       .catch(function (err) {
         console.error('loadTodayDishes error:', err)
@@ -166,6 +168,7 @@ Page({
         imageFileId: fileID
       })
     }).then(function () {
+      cache.markDirty(['dishes'])
       wx.showToast({ title: '添加成功', icon: 'success' })
       that.setData({
         dishName: '',
@@ -201,6 +204,7 @@ Page({
         if (res.confirm) {
           cloudUtil.callCloud('deleteDish', { dishId: dishId })
             .then(function () {
+              cache.markDirty(['dishes'])
               wx.showToast({ title: '已删除', icon: 'success' })
               that.loadTodayDishes()
             })
@@ -279,6 +283,7 @@ Page({
     that.setData({ importSubmitting: true })
     cloudUtil.callCloud('batchAddDish', { dishes: dishes })
       .then(function (res) {
+        cache.markDirty(['dishes'])
         wx.showToast({ title: '已添加' + res.added + '道菜', icon: 'success' })
         that.setData({ showImportPopup: false, importSubmitting: false })
         that.loadTodayDishes()
@@ -357,6 +362,7 @@ Page({
       }
       return cloudUtil.callCloud('updateDish', params)
     }).then(function () {
+      cache.markDirty(['dishes'])
       wx.showToast({ title: '已更新', icon: 'success' })
       that.setData({ showEditModal: false, editDish: null, editSubmitting: false })
       that.loadTodayDishes()

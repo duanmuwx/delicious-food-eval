@@ -1,6 +1,7 @@
 var dateUtil = require('../../utils/date')
 var auth = require('../../utils/auth')
 var cloudUtil = require('../../utils/cloud')
+var cache = require('../../utils/cache')
 
 Page({
   data: {
@@ -113,6 +114,7 @@ Page({
             imageFileId: uploadedFileID
           })
         }).then(function () {
+          cache.markDirty(['dishes', 'ratings'])
           wx.showToast({ title: '上传成功', icon: 'success' })
           that.loadData()
         }).catch(function (err) {
@@ -143,6 +145,7 @@ Page({
       comment: that.data.myComment.trim().slice(0, 50),
       date: dateUtil.getToday()
     }).then(function () {
+      cache.markDirty(['dishes', 'ratings'])
       wx.showToast({ title: '评分成功', icon: 'success' })
       setTimeout(function () {
         that.loadData()

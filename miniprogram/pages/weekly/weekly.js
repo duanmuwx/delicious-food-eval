@@ -1,5 +1,6 @@
 var auth = require('../../utils/auth')
 var dateUtil = require('../../utils/date')
+var cache = require('../../utils/cache')
 
 Page({
   data: {
@@ -26,7 +27,7 @@ Page({
   },
 
   onShow: function () {
-    if (auth.isAdmin() && this.data.today) {
+    if (auth.isAdmin() && this.data.today && cache.needRefresh(this, 'dishes')) {
       this.loadWeek()
     }
   },
@@ -105,6 +106,7 @@ Page({
         }
 
         that.setData({ days: days, loading: false })
+        cache.stamp(that)
       })
       .catch(function (err) {
         console.error('loadWeek error:', err)

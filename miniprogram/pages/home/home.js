@@ -2,6 +2,7 @@ var dateUtil = require('../../utils/date')
 var auth = require('../../utils/auth')
 var shareUtil = require('../../utils/share')
 var cloudUtil = require('../../utils/cloud')
+var cache = require('../../utils/cache')
 
 // 模板 ID，需要替换为微信公众平台申请的实际模板 ID
 var SUBSCRIBE_TMPL_ID = 'YOUR_TEMPLATE_ID'
@@ -27,7 +28,9 @@ Page({
   },
 
   onShow: function () {
-    this.loadDishes()
+    if (cache.needRefresh(this, 'dishes')) {
+      this.loadDishes()
+    }
   },
 
   loadDishes: function () {
@@ -48,6 +51,7 @@ Page({
         dinnerDishes: dishes.filter(function (d) { return d.meal === 'dinner' }),
         loading: false
       })
+      cache.stamp(that)
     }).catch(function (err) {
       console.error('loadDishes error:', err)
       that.setData({ loading: false })
@@ -60,6 +64,7 @@ Page({
   },
 
   onPullDownRefresh: function () {
+    this._cacheTime = 0
     this.loadDishes().then(function () {
       wx.stopPullDownRefresh()
     })

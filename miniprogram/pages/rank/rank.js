@@ -1,5 +1,6 @@
 var auth = require('../../utils/auth')
 var cloudUtil = require('../../utils/cloud')
+var cache = require('../../utils/cache')
 
 Page({
   data: {
@@ -9,7 +10,9 @@ Page({
   },
 
   onShow: function () {
-    this.loadRanking()
+    if (cache.needRefresh(this, 'ratings')) {
+      this.loadRanking()
+    }
   },
 
   onTabChange: function (e) {
@@ -36,6 +39,7 @@ Page({
         rankList: list,
         loading: false
       })
+      cache.stamp(that)
     }).catch(function (err) {
       console.error('loadRanking error:', err)
       that.setData({ loading: false })
@@ -43,6 +47,7 @@ Page({
   },
 
   onPullDownRefresh: function () {
+    this._cacheTime = 0
     this.loadRanking().then(function () {
       wx.stopPullDownRefresh()
     })
